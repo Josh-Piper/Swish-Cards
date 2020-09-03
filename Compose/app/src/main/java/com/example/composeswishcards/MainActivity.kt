@@ -88,8 +88,12 @@ fun DefaultFlashCard() {
                 .then(Modifier.wrapContentSize(Alignment.Center))
                 .clip(shape = RoundedCornerShape(16.dp))) {
             Box(modifier = Modifier.preferredSize(350.dp)
-                    .border(width = 4.dp, color = Gray, shape = RoundedCornerShape(16.dp))
-                    .clickable(onClick = { question.value = flashCards.currentFlashCards.answer })
+                    .border(width = 4.dp,
+                            color = Gray,
+                            shape = RoundedCornerShape(16.dp))
+                    .clickable(
+                            onClick = {
+                                question.value = flashCards.currentFlashCards.answer })
                     .gravity(align = Alignment.CenterHorizontally),
                     shape = RoundedCornerShape(2.dp),
                     backgroundColor = DarkGray,
@@ -114,7 +118,9 @@ fun DefaultFlashCard() {
                     textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(30.dp))
-            Button(onClick = { flashCards.incrementQuestion(); question.value = flashCards.currentFlashCards.question },
+            Button(onClick = {
+                flashCards.incrementQuestion();
+                question.value = flashCards.currentFlashCards.question },
                     shape = RoundedCornerShape(10.dp),
                     content = { Text("Next Card") },
                     backgroundColor = Cyan)

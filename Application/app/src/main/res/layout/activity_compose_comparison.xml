@@ -5,50 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="30dp"
     tools:context=".ComposeComparison">
 
+    <include layout="@layout/toolbar_compose" />
 
-    <Button
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/flashCardBTN"
-        android:padding="40dp"
-        android:layout_gravity="center"
-        android:background="@drawable/box"
-        android:text="Placeholder"
-        android:textSize="25sp"
-        android:layout_height="300dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/flashCardBTN"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="50dp"
+            android:background="@drawable/box"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:lines="4"
+            android:padding="16dp"
+            android:text="Placeholder"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25sp" />
 
 
-    <TextView
-        android:layout_marginTop="30dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Flash Card application"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:textColor="#000000"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Flash Card application"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
-    <TextView
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="The following is a demonstration of using Android Compose to create a Flash card"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:textColor="#000000"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="The following is a demonstration of using Android Compose to create a Flash card"
+            android:textColor="#000000"
+            android:textSize="15sp" />
 
-    <Button
-        android:layout_width="142dp"
-        android:layout_marginTop="30dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/nextCardBTN"
-        android:layout_gravity="center"
-        android:background="@drawable/boxbutton"
-        android:padding="5dp"
-        android:paddingHorizontal="100dp"
-        android:text="Next Card" />
-    
-    
+        <Button
+            android:id="@+id/nextCardBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/boxbutton"
+            android:paddingHorizontal="10dp"
+            android:text="Next Card" />
+
+    </LinearLayout>
 </LinearLayout>
