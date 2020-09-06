@@ -59,9 +59,10 @@ fun TopBar(text: String) {
 }
 
 @Composable
-fun DefaultFlashCard(model: ViewModel) {
+fun DefaultFlashCard(model: ViewModel, text: List<String>) {
 
     val viewModel = model as FlashCardViewModel
+    val title = "Flash Card Application"
 
     Spacer(modifier = Modifier.height(30.dp))
     MaterialTheme {
@@ -94,15 +95,16 @@ fun DefaultFlashCard(model: ViewModel) {
         Column(modifier = Modifier.padding(16.dp),
                 horizontalGravity = Alignment.CenterHorizontally) {
 
-            Text("Flash Card application",
+            Text(title,
                     style = typography.h6,
                     color = Black)
 
-            Text("The following is a demonstration of using " +
-                    "Android Compose to create a Flash Card",
+            for (t in text) {
+            Text(t,
                     style = typography.body2,
                     color = Black,
                     textAlign = TextAlign.Center)
+            }
 
             Spacer(modifier = Modifier.height(30.dp))
             Button(onClick = {
