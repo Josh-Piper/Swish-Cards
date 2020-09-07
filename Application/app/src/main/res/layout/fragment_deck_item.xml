@@ -5,14 +5,49 @@
     android:layout_height="wrap_content"
     android:maxHeight="100dp"
     android:minHeight="100dp"
+    android:weightSum="10"
+    android:background="@color/background_color"
     android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_weight="8"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/default_margin_size"
+        android:layout_height="match_parent">
     <TextView
         android:id="@+id/fragment_deck_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        tools:text="placeholder" />
+        android:maxLines="@dimen/max_line"
+        android:textSize="@dimen/default_text_size"
+        android:textColor="@color/main_text_color"
+        tools:text="@string/placeholder" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder"
+            android:textColor="@color/main_text_color"/>
+
+    </LinearLayout>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/default_margin_size"
+        android:layout_gravity="right"
+        android:layout_weight="2"
+        android:gravity="right|center_vertical">
+
+        <CheckBox
+            android:id="@+id/checkboxSelect"
+            android:buttonTint="@color/main_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleY="@dimen/default_scale_checkbox"
+            android:scaleX="@dimen/default_scale_checkbox"
+            android:gravity="right|center_vertical" />
+    </TableRow>
 </LinearLayout>

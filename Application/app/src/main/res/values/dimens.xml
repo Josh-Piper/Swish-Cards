@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="max_line">1</dimen>
+    <dimen name="default_margin_size">16dp</dimen>
+    <dimen name="fab_icon_size">50dp</dimen>
+    <item name="default_scale_checkbox" type="dimen" format="float">1.5</item>
+</resources>

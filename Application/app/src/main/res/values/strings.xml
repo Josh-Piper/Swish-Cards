@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Swish Cards</string>
+    <string name="placeholder">Placeholder</string>
 </resources>

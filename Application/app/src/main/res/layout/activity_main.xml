@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/background_color"
     android:orientation="vertical"
     android:weightSum="10"
     tools:context=".MainActivity">
@@ -22,9 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/default_margin_size"
         android:layout_weight="1"
         android:elevation="6dp"
+        app:maxImageSize="@dimen/fab_icon_size"
         android:src="@drawable/ic_white_add_icon"
         app:fabSize="normal" />
 
