@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +28,9 @@ class MainActivity : AppCompatActivity() {
         adapter = DeckRecyclerAdapter(this)
 
         globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)
+
         globalViewModel.deleteAllDecks()
+
         globalViewModel.allDecks.observe(this, Observer { deck ->
             deck?.let { adapter.setDecks(deck) }
         })
@@ -53,5 +56,10 @@ class MainActivity : AppCompatActivity() {
                 globalViewModel.insert(deck)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("TAG", "onDestroy")
     }
 }

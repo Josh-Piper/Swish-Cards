@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Swish Cards</string>
     <string name="placeholder">Placeholder</string>
+    <string name="add_button">ADD</string>
+    <string name="due_text">DUE</string>
+    <string name="deck_text">DECK</string>
+    <string name="back_button">BACK</string>
+    <string name="settings_button">SETTINGS</string>
+    <string name="decks_button">DECKS</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

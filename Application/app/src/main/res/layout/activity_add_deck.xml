@@ -4,20 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:weightSum="10"
     android:background="@color/background_color"
     tools:context=".AddDeckActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="10">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
-        android:layout_weight="6"
+        android:layout_weight="3"
+        android:weightSum="10"
         android:background="@drawable/corneredboxgray"
         android:gravity="center"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="30dp"
+            android:layout_weight="8">
 
 
         <TextView
@@ -25,28 +42,98 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
-            android:text="Deck"
+            android:text="@string/deck_text"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="35sp" />
+            android:textSize="@dimen/med_text_size" />
 
         <EditText
             android:id="@+id/activity_add_deck_title_input_text"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="@dimen/med_margin_size"
+            android:gravity="center|center_vertical"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder"
+            android:background="@drawable/boxedittext"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/med_text_size" />
+
+        <TextView
+            android:layout_marginTop="@dimen/med_margin_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
-            android:hint="Hello"
-            android:textColor="#f00"
-            android:textSize="25sp" />
+            android:text="@string/due_text"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/med_text_size" />
+
+        <EditText
+            android:id="@+id/activity_add_deck_due_input_text"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="@dimen/med_margin_size"
+            android:gravity="center|center_vertical"
+            android:layout_height="wrap_content"
+            android:hint="@string/placeholder"
+            android:background="@drawable/boxedittext"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/med_text_size" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="2"
+            android:weightSum="10"
+            android:gravity="center_horizontal"
+            android:layout_height="0dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                />
 
         <Button
             android:id="@+id/activity_add_deck_done_button"
             android:layout_width="wrap_content"
+            android:paddingHorizontal="@dimen/med_margin_size"
+            android:background="@drawable/boxbuttonadd"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="DONE"
+            android:text="@string/add_button"
+            android:layout_weight="2"
+            android:textColor="@color/white"
             android:textSize="35sp" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginRight="@dimen/default_margin_size"
+                android:textColor="@color/delete_color"
+                android:layout_gravity="bottom"
+
+                android:text="DELETE"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
+    <include layout="@layout/fragment_navigation"/>
+
 
 </LinearLayout>

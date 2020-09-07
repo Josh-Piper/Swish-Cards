@@ -22,17 +22,18 @@ class DeckRecyclerAdapter(context: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
-        val view = inflater.inflate(R.layout.fragment_deck_item, parent, false) as View
+        val view = inflater.inflate(R.layout.fragment_deck_item, parent, false)
         return DeckViewHolder(view)
     }
 
-    internal fun setDecks(decks: List<Deck>) {
-        this.decks = decks
+    internal fun setDecks(deck: List<Deck>) {
+        this.decks = deck
         notifyDataSetChanged()
     }
 
     class DeckViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val title: TextView = v.findViewById(R.id.fragment_deck_item_title)
+        private val date: TextView = v.findViewById(R.id.fragment_deck_item_due_date)
 
         fun bind(item: Deck) {
             title.text = item.title

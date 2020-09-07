@@ -4,11 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/background_color"
     android:orientation="vertical"
-    android:weightSum="10"
     tools:context=".MainActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/main_activity_reclyer_view"
@@ -18,16 +32,22 @@
         android:orientation="vertical">
     </androidx.recyclerview.widget.RecyclerView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/main_activity_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/default_margin_size"
-        android:layout_weight="1"
-        android:elevation="6dp"
-        app:maxImageSize="@dimen/fab_icon_size"
-        android:src="@drawable/ic_white_add_icon"
-        app:fabSize="normal" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/main_activity_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/default_margin_size"
+            android:elevation="6dp"
+            app:maxImageSize="@dimen/fab_icon_size"
+            android:src="@drawable/ic_white_add_icon"
+            app:fabSize="normal" />
+        </LinearLayout>
+
+        <include layout="@layout/fragment_navigation"/>
+    </LinearLayout>
+
+
+
 
 </LinearLayout>

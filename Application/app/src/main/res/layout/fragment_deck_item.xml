@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/fragment_deck_item_linearLayout"
     android:layout_height="wrap_content"
     android:maxHeight="100dp"
     android:minHeight="100dp"
@@ -16,6 +17,7 @@
         android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/default_margin_size"
         android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/fragment_deck_item_title"
         android:layout_width="wrap_content"
@@ -27,6 +29,7 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:id="@+id/fragment_deck_item_due_date"
             android:layout_height="wrap_content"
             android:text="@string/placeholder"
             android:textColor="@color/main_text_color"/>
