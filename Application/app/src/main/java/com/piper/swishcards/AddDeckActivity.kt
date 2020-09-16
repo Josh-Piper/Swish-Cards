@@ -61,9 +61,15 @@ class AddDeckActivity : AppCompatActivity() {
 
             if  (!(title.isNullOrEmpty()) && !(due.isNullOrEmpty())) {
 
+                //if Deck was parsed from Recycler Item
+                if (deck != null) {
+                    deck.title = title
+                    deck.date = due
+                    Log.i("hello", "${deck.date}")
+                }
 
                 val addDeck = Deck(title = title, date = due) //create a new Deck object with the EditText values
-                replyIntent.putExtra(ADD_DECK_REPLY, addDeck)
+                replyIntent.putExtra(ADD_DECK_REPLY, deck ?: addDeck)
                 setResult(Activity.RESULT_OK, replyIntent)
                 finish()
             } else {

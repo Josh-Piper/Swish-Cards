@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             //Update deck
             deck?.let {
                 globalViewModel.update(deck)
+                Log.i("hello", "${deck.date}")
             }
         }
 
