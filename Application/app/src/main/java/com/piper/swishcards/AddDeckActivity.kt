@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 class AddDeckActivity : AppCompatActivity() {
     private lateinit var doneBtn: Button
@@ -22,13 +24,34 @@ class AddDeckActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_deck)
 
+        //attach all needed widgets to variables
         doneBtn = findViewById(R.id.activity_add_deck_done_button)
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
 
+        //if activity started from recycler item, then collect the Deck object
+        val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
 
+        //if item collected is not null, assign the current EditTexts to match it
+        if (deck != null) {
+            inputTitle.setText(deck.title)
+            inputDate.setText(deck.date)
+        }
+
+        //Set minimum due date to be current date.
+        val datePicker = DatePickerDialog(this)
+        datePicker.datePicker.apply {
+            minDate = Calendar.getInstance().timeInMillis
+        }
+
+        //Open DatePickerDialogue instead of inputting text.
         inputDate.setOnClickListener {
-            //DatePickerDialogue. Convert to Text for Flash Card DECK class
+            datePicker.show()
+            datePicker.setOnDateSetListener { datePicker, year, month, day ->
+                //format date to Australian convention and set EditText to it.
+                val newDate = Deck.formatDateToAU(day, month, year)
+                inputDate.setText(newDate)
+            }
         }
 
         doneBtn.setOnClickListener {view ->
@@ -36,13 +59,10 @@ class AddDeckActivity : AppCompatActivity() {
             var title: String = inputTitle.text.toString()
             var due: String = inputDate.text.toString()
 
+            if  (!(title.isNullOrEmpty()) && !(due.isNullOrEmpty())) {
 
 
-            Log.i("TAG", "")
-
-            if (!title.isNullOrEmpty()) {
-                val addDeck =
-                    Deck(title = inputTitle.text.toString()) //issues with replicacing the title
+                val addDeck = Deck(title = title, date = due) //create a new Deck object with the EditText values
                 replyIntent.putExtra(ADD_DECK_REPLY, addDeck)
                 setResult(Activity.RESULT_OK, replyIntent)
                 finish()
@@ -51,10 +71,12 @@ class AddDeckActivity : AppCompatActivity() {
                     Color.RED).show()
             }
 
+
         }
     }
 
     companion object {
         const val ADD_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.REPLY"
+        const val MODIFY_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.MODIFY.REPLY"
     }
 }

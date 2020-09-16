@@ -23,6 +23,12 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
         if (!checkDuplicate(deck.title)) repository.insert(deck)
     }
 
+    fun update(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
+        if (!checkDuplicate(deck.title)) repository.upate(deck)
+    }
+
+
+    //ensures no Decks have the same title (prevent duplicate) => prevent requests otherwise
     fun checkDuplicate(title: String): Boolean {
         allDecks.value?.forEach { deck -> if (deck.title == title) return true }
         return false

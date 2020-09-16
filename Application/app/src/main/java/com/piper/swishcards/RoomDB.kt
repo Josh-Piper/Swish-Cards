@@ -6,6 +6,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Dao
 interface DeckDAO {
@@ -15,14 +16,17 @@ interface DeckDAO {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(deck: Deck)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+
+    //new Update query (based on UUID) for SQLite => "UPDATE deck_table SET title = deck.title, date = deck.date WHERE uuid == deck.uuid"
+    @Update(onConflict = OnConflictStrategy.REPLACE)//@Query("UPDATE deck_table SET title=(:title), date = (:date) WHERE id = (:id)")
     suspend fun update(deck: Deck)
 
     @Query("DELETE FROM deck_table")
     suspend fun deleteAll()
 }
 
-@Database(entities = [Deck::class], version = 1, exportSchema = false)
+@Database(entities = [Deck::class], version = 3, exportSchema = false)
+@TypeConverters(DeckTypeConverters::class)
 abstract class FlashCardDB : RoomDatabase() {
 
     abstract fun DeckDAO(): DeckDAO
@@ -40,7 +44,7 @@ abstract class FlashCardDB : RoomDatabase() {
                     context.applicationContext,
                     FlashCardDB::class.java,
                     "flash_cards_database"
-                ).build()
+                ).build() //.fallbackToDestructiveMigration() will causes users to loose data during migrations (use only for testing purposes)
                 INSTANCE = instance
                 return instance
             }

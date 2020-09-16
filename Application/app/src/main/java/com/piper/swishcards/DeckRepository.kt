@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import androidx.lifecycle.LiveData
+import java.util.*
 
 class DeckRepository(private val deckDao: DeckDAO) {
 
@@ -8,6 +9,10 @@ class DeckRepository(private val deckDao: DeckDAO) {
 
     suspend fun insert(deck: Deck) {
         deckDao.insert(deck)
+    }
+
+    suspend fun upate(deck: Deck) {
+        deckDao.update(deck)
     }
 
     suspend fun deleteAllDecks() {
