@@ -13,7 +13,8 @@ import java.util.*
 data class Deck(
     @PrimaryKey @ColumnInfo(name = "id") val id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "title") var title: String,
-    @ColumnInfo(name = "date") var date: String
+    @ColumnInfo(name = "date") var date: String,
+    @ColumnInfo(name = "completed") var completed: Boolean
 ) : Parcelable {
 
 

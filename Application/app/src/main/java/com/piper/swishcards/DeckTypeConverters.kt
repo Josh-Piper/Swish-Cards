@@ -13,4 +13,20 @@ class DeckTypeConverters {
     fun fromUUID(uuid: UUID): String? {
         return uuid?.toString()
     }
+
+    @TypeConverter
+    fun fromBoolean(boolean: Boolean): Int? {
+        return when (boolean) {
+            true -> 1
+            else -> 0
+        }
+    }
+
+    @TypeConverter
+    fun toBoolean(boolean: Int): Boolean? {
+        return when (boolean) {
+            1 -> true
+            else -> false
+        }
+    }
 }

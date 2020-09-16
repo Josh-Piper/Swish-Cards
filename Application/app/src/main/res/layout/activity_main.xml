@@ -8,46 +8,80 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:weightSum="10"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_height="match_parent">
+        android:orientation="vertical"
+        android:weightSum="10">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             android:layout_weight="8"
             android:gravity="center"
-            android:layout_height="match_parent">
+            android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_activity_reclyer_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="9"
-        android:orientation="vertical">
-    </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/main_activity_reclyer_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9"
+                android:orientation="vertical"></androidx.recyclerview.widget.RecyclerView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/main_activity_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/default_margin_size"
-            android:elevation="6dp"
-            app:maxImageSize="@dimen/fab_icon_size"
-            android:src="@drawable/ic_white_add_icon"
-            app:fabSize="normal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="6">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:gravity="bottom"
+                    android:layout_marginLeft="@dimen/default_margin_size"
+                    android:layout_marginBottom="@dimen/default_margin_size"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/default_text_size"
+                        android:textColor="@color/lightGrayCorneredBox"
+                        android:text="@string/sort_by_title" />
+
+                    <!--Rotating Special Text Bar -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:id="@+id/context_menu_sort_by_text"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sort_by_alpha_asc"
+                        android:textColor="@color/border_navi"
+                        android:textSize="@dimen/small_text_size"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/main_activity_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="@dimen/default_margin_size"
+                    android:elevation="6dp"
+                    android:src="@drawable/ic_white_add_icon"
+                    app:fabSize="normal"
+                    app:maxImageSize="@dimen/fab_icon_size" />
+
+
+            </LinearLayout>
         </LinearLayout>
 
-        <include layout="@layout/fragment_navigation"/>
+        <include layout="@layout/fragment_navigation" />
     </LinearLayout>
-
-
 
 
 </LinearLayout>

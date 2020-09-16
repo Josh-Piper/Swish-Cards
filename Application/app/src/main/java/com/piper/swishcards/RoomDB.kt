@@ -10,12 +10,28 @@ import java.util.*
 
 @Dao
 interface DeckDAO {
+
+    //Sorting
     @Query("SELECT * from deck_table ORDER BY title ASC")
     fun getDecksSortedByAlphaAsc(): LiveData<List<Deck>>
 
+
+    @Query("SELECT * from deck_table ORDER BY title DESC")
+    fun getDecksSortedByAlphaDesc(): LiveData<List<Deck>>
+
+    @Query("SELECT * from deck_table WHERE completed=1 ORDER BY title ASC")
+    fun getDecksSortedByNonCompleted(): LiveData<List<Deck>>
+
+    @Query("SELECT * from deck_table ORDER BY date ASC")
+    fun getDecksSortedByDueDate(): LiveData<List<Deck>>
+
+
+    //Modifying
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(deck: Deck)
 
+    @Delete
+    suspend fun delete(deck: Deck)
 
     //new Update query (based on UUID) for SQLite => "UPDATE deck_table SET title = deck.title, date = deck.date WHERE uuid == deck.uuid"
     @Update(onConflict = OnConflictStrategy.REPLACE)//@Query("UPDATE deck_table SET title=(:title), date = (:date) WHERE id = (:id)")
@@ -25,7 +41,7 @@ interface DeckDAO {
     suspend fun deleteAll()
 }
 
-@Database(entities = [Deck::class], version = 3, exportSchema = false)
+@Database(entities = [Deck::class], version = 5, exportSchema = false)
 @TypeConverters(DeckTypeConverters::class)
 abstract class FlashCardDB : RoomDatabase() {
 

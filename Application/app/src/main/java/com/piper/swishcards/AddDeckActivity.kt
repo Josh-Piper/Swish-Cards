@@ -17,8 +17,10 @@ import java.util.*
 
 class AddDeckActivity : AppCompatActivity() {
     private lateinit var doneBtn: Button
+    private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
     private lateinit var inputDate: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +28,10 @@ class AddDeckActivity : AppCompatActivity() {
 
         //attach all needed widgets to variables
         doneBtn = findViewById(R.id.activity_add_deck_done_button)
+        deleteBtn = findViewById(R.id.activity_add_deck_delete_button)
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
+
 
         //if activity started from recycler item, then collect the Deck object
         val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
@@ -68,7 +72,7 @@ class AddDeckActivity : AppCompatActivity() {
                     Log.i("hello", "${deck.date}")
                 }
 
-                val addDeck = Deck(title = title, date = due) //create a new Deck object with the EditText values
+                val addDeck = Deck(title = title, date = due, completed = false) //create a new Deck object with the EditText values
                 replyIntent.putExtra(ADD_DECK_REPLY, deck ?: addDeck)
                 setResult(Activity.RESULT_OK, replyIntent)
                 finish()
@@ -76,8 +80,16 @@ class AddDeckActivity : AppCompatActivity() {
                 Snackbar.make(view, "Invalid Input! check everything is correct ", Snackbar.LENGTH_LONG).setActionTextColor(
                     Color.RED).show()
             }
+        }
 
 
+        deleteBtn.setOnClickListener {
+            if (deck != null) {
+                deck.title = "deleted_object"
+                val intent = Intent().apply { putExtra(ADD_DECK_REPLY, deck) }
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
         }
     }
 

@@ -19,12 +19,25 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
         allDecks = repository.allDecks
     }
 
+    fun sortBy(value: Sort) {
+        when (value) {
+            Sort.ALPHA_ASC -> repository.sortBy(Sort.ALPHA_ASC)
+            Sort.ALPHA_DES -> repository.sortBy(Sort.ALPHA_DES)
+            Sort.NON_COM -> repository.sortBy(Sort.NON_COM)
+            Sort.DUE_DATE -> repository.sortBy(Sort.DUE_DATE)
+        }
+    }
+
     fun insert(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(deck)
     }
 
     fun update(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
         repository.upate(deck)
+    }
+
+    fun delete(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete(deck)
     }
 
     fun deleteAllDecks() {
