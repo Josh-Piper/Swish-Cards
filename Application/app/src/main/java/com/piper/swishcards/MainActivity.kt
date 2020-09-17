@@ -2,20 +2,23 @@ package com.piper.swishcards
 
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.PrecomputedText
 import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.security.Policy
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +27,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: DeckRecyclerAdapter
+    private lateinit var broadcastReceiver: BroadcastReceiver
     private val AddDeckActivityResultCode = 25
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +44,31 @@ class MainActivity : AppCompatActivity() {
         contextMenuText = findViewById(R.id.context_menu_sort_by_text)
         registerForContextMenu(contextMenuText)
 
+        //Create broadcast listener and register the filters
+       broadcastReceiver = object: BroadcastReceiver() {
+           override fun onReceive(context: Context?, intent: Intent?) {
+               //get deck, if deck != null then update the checkmark response
+               if (intent?.action == DeckRecyclerAdapter.changeCompletedForDeck) {
+                   val deck = intent?.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
+                   Log.i("wow", "${deck?.title}")
+                   deck?.let { deck ->
+                       globalViewModel.update(deck)
+                   }
+               }
+           }
+       }
+        val filter = IntentFilter(DeckRecyclerAdapter.changeCompletedForDeck)
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter)
 
-        //Recycler view
+
+
+
+        //Define adapter for recycler view
         recycler = findViewById(R.id.main_activity_reclyer_view)
         adapter = DeckRecyclerAdapter(this)
 
         //Delete all Decks stored in room ToDo ONLY ACTIVE DURING DEVELOPMENT STAGES
         globalViewModel.deleteAllDecks()
-
-
-        //Listen to LocalBroadcast from Recycler Item to Update Complete status (from Checkbox)
-        /*val myBC: BroadcastReceiver = BroadcastReceiver.PendingResult()*/
 
         globalViewModel.sortBy(Sort.ALPHA_ASC)
 
@@ -71,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Choose sorting type => opens context menu
-        contextMenuText.setOnClickListener {view ->
+        contextMenuText.setOnClickListener { view ->
             openContextMenu(view)
         }
 
@@ -79,7 +98,11 @@ class MainActivity : AppCompatActivity() {
 
 
     //sort By Context Menu
-    override fun onCreateContextMenu (menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         menu?.setHeaderTitle("Choose your option")
         menuInflater.inflate(R.menu.sort_by_deck, menu)
@@ -88,10 +111,14 @@ class MainActivity : AppCompatActivity() {
     //What happens when button is clicked. Link to globalViewModel.
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.sort_by_alpha_asc -> { globalViewModel.sortBy(Sort.ALPHA_ASC) ; contextMenuText.setText(R.string.sort_by_alpha_asc) ; return true; }
-            R.id.sort_by_alpha_desc -> { globalViewModel.sortBy(Sort.ALPHA_DES) ; contextMenuText.setText(R.string.sort_by_alpha_des) ; return true; }
-            R.id.sort_by_completed_hidden -> { globalViewModel.sortBy(Sort.NON_COM) ; contextMenuText.setText(R.string.sort_by_non_complete) ; return true; }
-            R.id.sort_by_due_date -> { globalViewModel.sortBy(Sort.DUE_DATE) ; contextMenuText.setText(R.string.sort_by_due_date) ; return true; }
+            R.id.sort_by_alpha_asc -> {
+                globalViewModel.sortBy(Sort.ALPHA_ASC); contextMenuText.setText(R.string.sort_by_alpha_asc); return true; }
+            R.id.sort_by_alpha_desc -> {
+                globalViewModel.sortBy(Sort.ALPHA_DES); contextMenuText.setText(R.string.sort_by_alpha_des); return true; }
+            R.id.sort_by_completed_hidden -> {
+                globalViewModel.sortBy(Sort.NON_COM); contextMenuText.setText(R.string.sort_by_non_complete); return true; }
+            R.id.sort_by_due_date -> {
+                globalViewModel.sortBy(Sort.DUE_DATE); contextMenuText.setText(R.string.sort_by_due_date); return true; }
             else -> return super.onContextItemSelected(item)
         }
     }
@@ -121,4 +148,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    //Destroy the BroadcastReceiver
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
+    }
 }
+
+
+
+

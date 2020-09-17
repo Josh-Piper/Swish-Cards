@@ -1,8 +1,10 @@
 package com.piper.swishcards
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -41,9 +44,15 @@ class DeckRecyclerAdapter(context: Context) :
             true
         }
 
+        //send Broadcast to MainActivity for globalViewModel to update the completed parametre for Deck (LocalBroadcastManager for security purposes)
         holder.checkBox.setOnClickListener {view ->
             item.completed = holder.checkBox.isChecked
-
+            Log.i("wow", "is checked: ${holder.checkBox.isChecked}")
+            val intent = Intent().apply {
+                setAction(changeCompletedForDeck)
+                putExtra(changeCompletedForDeckItemID, item)
+            }
+            LocalBroadcastManager.getInstance(view.context).sendBroadcast(intent)
         }
     }
 
@@ -56,6 +65,8 @@ class DeckRecyclerAdapter(context: Context) :
         this.decks = deck
         notifyDataSetChanged()
     }
+
+
 
 
 
@@ -76,6 +87,8 @@ class DeckRecyclerAdapter(context: Context) :
     companion object {
         const val AddDeckActivityStartForResult = 1999
         const val DeckPassedItemKey = "deck_passed_from_deck_recycler_view"
+        const val changeCompletedForDeck = "deck_passed_changing_boolean_for_completed"
+        const val changeCompletedForDeckItemID = "deck_passed_as_item_for_changing_completed_boolean"
     }
 }
 

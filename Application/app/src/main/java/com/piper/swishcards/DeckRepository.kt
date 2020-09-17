@@ -10,9 +10,9 @@ class DeckRepository(private val deckDao: DeckDAO) {
     private var allDecks = MediatorLiveData<List<Deck>>() //MutableLiveData<List<Deck>>() //instantiate object
 
     fun getAllDecks(): LiveData<List<Deck>> = allDecks //Repository handles livedata transmission. ViewModel references the actual Data. When allDecks data is changed, should be LiveData and also sortable
-    //^NEEDS TO AUTO UPDATE -> as postValue will only post a static list
 
 
+    //changes source of livedata.
     fun loadLiveData(sort: LiveData<List<Deck>>){
         allDecks.addSource(sort) {
             allDecks.value = it
