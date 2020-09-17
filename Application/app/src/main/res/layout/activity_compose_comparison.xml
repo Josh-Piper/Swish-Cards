@@ -24,7 +24,7 @@
             android:fontFamily="sans-serif-condensed-medium"
             android:lines="4"
             android:padding="16dp"
-            android:text="Placeholder"
+            android:text="@string/placeholder"
             android:textAllCaps="false"
             android:textColor="#ffffff"
             android:textSize="25sp" />
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center"
-            android:text="Flash Card application"
+            android:text="@string/compose_text_1"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="The following is a demonstration of using Android Compose to create a Flash card"
+            android:text="@string/compose_text_2"
             android:textColor="#000000"
             android:textSize="15sp" />
 
@@ -58,7 +58,7 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/boxbutton"
             android:paddingHorizontal="10dp"
-            android:text="Next Card" />
+            android:text="@string/compose_btn_next_card" />
 
     </LinearLayout>
 

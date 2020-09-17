@@ -1,19 +1,33 @@
 package com.piper.swishcards
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import java.util.*
 
 class DeckRepository(private val deckDao: DeckDAO) {
 
-    var allDecks: LiveData<List<Deck>> = deckDao.getDecksSortedByAlphaAsc()
+    private var allDecks = MediatorLiveData<List<Deck>>() //MutableLiveData<List<Deck>>() //instantiate object
 
-    fun sortBy(value: Sort) {
-        when (value) {
-            Sort.ALPHA_ASC -> allDecks = deckDao.getDecksSortedByAlphaAsc()
-            Sort.ALPHA_DES -> allDecks = deckDao.getDecksSortedByAlphaDesc()
-            Sort.NON_COM -> allDecks = deckDao.getDecksSortedByNonCompleted()
-            Sort.DUE_DATE -> allDecks = deckDao.getDecksSortedByDueDate()
+    fun getAllDecks(): LiveData<List<Deck>> = allDecks //Repository handles livedata transmission. ViewModel references the actual Data. When allDecks data is changed, should be LiveData and also sortable
+    //^NEEDS TO AUTO UPDATE -> as postValue will only post a static list
+
+
+    fun loadLiveData(sort: LiveData<List<Deck>>){
+        allDecks.addSource(sort) {
+            allDecks.value = it
         }
+    }
+    //This changes the list BUT only once. Needs to be dynamically changing
+    suspend fun sortBy(sortingMethod: Sort) {
+
+        when (sortingMethod) {
+            Sort.ALPHA_ASC -> loadLiveData(deckDao.getDecksSortedByAlphaAsc())
+            Sort.ALPHA_DES -> loadLiveData(deckDao.getDecksSortedByAlphaDesc())
+            Sort.NON_COM -> loadLiveData( deckDao.getDecksSortedByNonCompleted())
+            Sort.DUE_DATE -> loadLiveData(deckDao.getDecksSortedByDueDate())
+        }
+
     }
 
     suspend fun insert(deck: Deck) {

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
@@ -40,11 +41,10 @@ class DeckRecyclerAdapter(context: Context) :
             true
         }
 
+        holder.checkBox.setOnClickListener {view ->
+            item.completed = holder.checkBox.isChecked
 
-/*        holder.layout.setOnClickListener {view ->
-            //can do this as not expecting anything new. Not looking for a result etc. so start from the onClick event
-            view.context.startActivity(intent)
-        }*/
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
@@ -64,6 +64,7 @@ class DeckRecyclerAdapter(context: Context) :
         private val title: TextView = v.findViewById(R.id.fragment_deck_item_title)
         private val date: TextView = v.findViewById(R.id.fragment_deck_item_due_date)
         val layout: LinearLayout = v.findViewById(R.id.fragment_deck_item_linearLayout)
+        val checkBox: CheckBox = v.findViewById(R.id.fragment_deck_item_selected)
 
         fun bind(item: Deck) {
             title.text = item.title

@@ -16,11 +16,11 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
     init {
         val decksDao = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO()
         repository = DeckRepository(deckDao = decksDao)
-        allDecks = repository.allDecks
+        allDecks = repository.getAllDecks() //should this be observing
     }
 
-    fun sortBy(value: Sort) {
-        when (value) {
+    fun sortBy(sortMethod: Sort) = viewModelScope.launch(Dispatchers.Main) {
+        when (sortMethod) {
             Sort.ALPHA_ASC -> repository.sortBy(Sort.ALPHA_ASC)
             Sort.ALPHA_DES -> repository.sortBy(Sort.ALPHA_DES)
             Sort.NON_COM -> repository.sortBy(Sort.NON_COM)

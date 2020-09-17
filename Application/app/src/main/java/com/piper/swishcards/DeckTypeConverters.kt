@@ -11,11 +11,11 @@ class DeckTypeConverters {
 
     @TypeConverter
     fun fromUUID(uuid: UUID): String? {
-        return uuid?.toString()
+        return uuid.toString()
     }
 
     @TypeConverter
-    fun fromBoolean(boolean: Boolean): Int? {
+    fun fromBoolean(boolean: Boolean?): Int? {
         return when (boolean) {
             true -> 1
             else -> 0

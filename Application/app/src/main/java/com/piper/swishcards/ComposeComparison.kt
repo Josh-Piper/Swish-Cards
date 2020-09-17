@@ -22,7 +22,7 @@ class ComposeComparison : AppCompatActivity() {
         cardButton.text = viewModel.flashCards.currentFlashCards
 
         cardButton.setOnClickListener {
-            viewModel.flashCards.changeState(State.answer)
+            viewModel.flashCards.changeState(State.Answer)
             cardButton.text = viewModel.flashCards.currentFlashCards
         }
 
@@ -37,8 +37,8 @@ data class Question(val question: String, val answer: String) {
 }
 
 enum class State {
-    question,
-    answer
+    Question,
+    Answer
 }
 
 class FlashCards(cards: List<Question>) {
@@ -48,9 +48,9 @@ class FlashCards(cards: List<Question>) {
     var currentQuestion = 0
 
     val currentFlashCards
-        get() = if (currentState == State.question) flashCards[currentQuestion].question else flashCards[currentQuestion].answer
+        get() = if (currentState == State.Question) flashCards[currentQuestion].question else flashCards[currentQuestion].answer
 
-    var currentState: State = State.question
+    var currentState: State = State.Question
 
     val changeState = {state: State -> currentState = state }
 
@@ -60,7 +60,7 @@ class FlashCards(cards: List<Question>) {
         } else {
             currentQuestion++
         }
-        currentState = State.question
+        currentState = State.Question
     }
 }
 

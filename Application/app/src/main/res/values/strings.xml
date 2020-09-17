@@ -16,4 +16,9 @@
     <string name="sort_by_alpha_des">Alphabetically Descending</string>
     <string name="sort_by_non_complete">Non-Completed</string>
     <string name="sort_by_due_date">Due Date</string>
+    <string name="description_hamburger_menu"><![CDATA[Hamburger Menu -> Vertical Dropdown]]></string>
+    <string name="delete_text">DELETE</string>
+    <string name="compose_text_1">Flash Card application</string>
+    <string name="compose_text_2">The following is a demonstration of using Android Compose to create a Flash card</string>
+    <string name="compose_btn_next_card">Next Card</string>
 </resources>

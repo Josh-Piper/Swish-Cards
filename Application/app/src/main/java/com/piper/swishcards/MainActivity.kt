@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -47,10 +48,14 @@ class MainActivity : AppCompatActivity() {
         globalViewModel.deleteAllDecks()
 
 
-        //Listen for livedata changes in ViewModel. if there is, update recycler view
-        globalViewModel.allDecks.observe(this, Observer { deck ->
+        //Listen to LocalBroadcast from Recycler Item to Update Complete status (from Checkbox)
+        /*val myBC: BroadcastReceiver = BroadcastReceiver.PendingResult()*/
+
+        globalViewModel.sortBy(Sort.ALPHA_ASC)
+
+        globalViewModel.allDecks.observeForever { deck ->
             deck?.let { adapter.setDecks(deck) }
-        })
+        }
 
         //Set RecyclerView.
         recycler.apply {
