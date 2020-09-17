@@ -30,10 +30,14 @@ class DeckRecyclerAdapter(context: Context) :
 
     override fun onBindViewHolder(holder: DeckViewHolder, position: Int) {
         val item = decks[position]
+
+        Log.i("wow", "item is ${item.title} and is: ${item.completed}")
+
+        holder.checkBox.isChecked = item.completed
+
+        Log.i("wow", "${holder.checkBox.isChecked} and ${item.completed}")
         holder.bind(item)
-
-
-
+        //can holder.apply everything
         //manages individual (set here to allow prioritising different decks, i.e. dates)
         holder.layout.setOnLongClickListener {view ->
             val intent = Intent(view.context, AddDeckActivity::class.java).apply {
@@ -45,9 +49,10 @@ class DeckRecyclerAdapter(context: Context) :
         }
 
         //send Broadcast to MainActivity for globalViewModel to update the completed parametre for Deck (LocalBroadcastManager for security purposes)
-        holder.checkBox.setOnClickListener {view ->
-            item.completed = holder.checkBox.isChecked
-            Log.i("wow", "is checked: ${holder.checkBox.isChecked}")
+        //isue in non-complete where if ticked to hide it will also automatically check the next box
+        holder.checkBox.setOnCheckedChangeListener { view, isChecked ->
+            item.completed = isChecked
+            Log.i("wow", "is checked: ${isChecked} and the UUID is ${item.id}")
             val intent = Intent().apply {
                 setAction(changeCompletedForDeck)
                 putExtra(changeCompletedForDeckItemID, item)
@@ -75,11 +80,11 @@ class DeckRecyclerAdapter(context: Context) :
         private val title: TextView = v.findViewById(R.id.fragment_deck_item_title)
         private val date: TextView = v.findViewById(R.id.fragment_deck_item_due_date)
         val layout: LinearLayout = v.findViewById(R.id.fragment_deck_item_linearLayout)
-        val checkBox: CheckBox = v.findViewById(R.id.fragment_deck_item_selected)
+        val checkBox: CheckBox = v.findViewById(R.id.fragment_deck_item_selected) //reused so will be buggy for items changed
 
         fun bind(item: Deck) {
             title.text = item.title
-            date.text = item.date
+            date.text = Deck.getStringFromCalendar(item.date)
         }
 
     }

@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity(tableName = "deck_table")
@@ -13,7 +14,7 @@ import java.util.*
 data class Deck(
     @PrimaryKey @ColumnInfo(name = "id") val id: UUID = UUID.randomUUID(),
     @ColumnInfo(name = "title") var title: String,
-    @ColumnInfo(name = "date") var date: String,
+    @ColumnInfo(name = "date") var date: Calendar,
     @ColumnInfo(name = "completed") var completed: Boolean
 ) : Parcelable {
 
@@ -31,7 +32,19 @@ data class Deck(
         fun formatDateToAU(day: Int, month: Int, year: Int): String {
             //string placeholders causes crashes outside of Activities etc.
             return "${addZeroToSingleDigit(day)}-${addZeroToSingleDigit(month)}-${addZeroToSingleDigit(year)}"
-
         }
+
+        fun getCalendarFromAU(dateAU: String): Calendar {
+            val date = SimpleDateFormat( "dd-MM-yyyy", Locale.ENGLISH).parse(dateAU)
+            val calender = Calendar.getInstance()
+            calender.time = date
+            return calender
+        }
+
+        fun getStringFromCalendar(calendar: Calendar): String {
+            val date = SimpleDateFormat("dd-MM-yyyy").format(calendar.time)
+            return date
+        }
+
     }
 }

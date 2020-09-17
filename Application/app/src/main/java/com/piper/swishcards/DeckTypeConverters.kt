@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DeckTypeConverters {
@@ -15,18 +16,14 @@ class DeckTypeConverters {
     }
 
     @TypeConverter
-    fun fromBoolean(boolean: Boolean?): Int? {
-        return when (boolean) {
-            true -> 1
-            else -> 0
-        }
+    fun toCalender(time: Long): Calendar {
+        var c = Calendar.getInstance()
+        c.timeInMillis = time
+        return c
     }
 
     @TypeConverter
-    fun toBoolean(boolean: Int): Boolean? {
-        return when (boolean) {
-            1 -> true
-            else -> false
-        }
+    fun fromCalendar(calendar: Calendar): Long {
+        return calendar.timeInMillis
     }
 }

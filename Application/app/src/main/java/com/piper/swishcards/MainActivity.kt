@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         //Delete all Decks stored in room ToDo ONLY ACTIVE DURING DEVELOPMENT STAGES
         globalViewModel.deleteAllDecks()
 
+        //start application is sorting alpha ascending mode
         globalViewModel.sortBy(Sort.ALPHA_ASC)
 
         globalViewModel.allDecks.observeForever { deck ->

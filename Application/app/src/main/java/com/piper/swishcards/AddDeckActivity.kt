@@ -39,7 +39,7 @@ class AddDeckActivity : AppCompatActivity() {
         //if item collected is not null, assign the current EditTexts to match it
         if (deck != null) {
             inputTitle.setText(deck.title)
-            inputDate.setText(deck.date)
+            inputDate.setText(Deck.getStringFromCalendar(deck.date))
         }
 
         //Set minimum due date to be current date.
@@ -68,11 +68,11 @@ class AddDeckActivity : AppCompatActivity() {
                 //if Deck was parsed from Recycler Item
                 if (deck != null) {
                     deck.title = title
-                    deck.date = due
+                    deck.date = Deck.getCalendarFromAU(due)
                     Log.i("hello", "${deck.date}")
                 }
 
-                val addDeck = Deck(title = title, date = due, completed = false) //create a new Deck object with the EditText values
+                val addDeck = Deck(title = title, date = Deck.getCalendarFromAU(due), completed = false) //create a new Deck object with the EditText values
                 replyIntent.putExtra(ADD_DECK_REPLY, deck ?: addDeck)
                 setResult(Activity.RESULT_OK, replyIntent)
                 finish()

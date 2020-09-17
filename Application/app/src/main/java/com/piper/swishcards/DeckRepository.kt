@@ -13,12 +13,13 @@ class DeckRepository(private val deckDao: DeckDAO) {
 
 
     //changes source of livedata.
-    fun loadLiveData(sort: LiveData<List<Deck>>){
+    private fun loadLiveData(sort: LiveData<List<Deck>>){
         allDecks.addSource(sort) {
             allDecks.value = it
         }
     }
-    //This changes the list BUT only once. Needs to be dynamically changing
+
+    //Changes datasource of livedata
     suspend fun sortBy(sortingMethod: Sort) {
 
         when (sortingMethod) {
@@ -27,7 +28,6 @@ class DeckRepository(private val deckDao: DeckDAO) {
             Sort.NON_COM -> loadLiveData( deckDao.getDecksSortedByNonCompleted())
             Sort.DUE_DATE -> loadLiveData(deckDao.getDecksSortedByDueDate())
         }
-
     }
 
     suspend fun insert(deck: Deck) {
