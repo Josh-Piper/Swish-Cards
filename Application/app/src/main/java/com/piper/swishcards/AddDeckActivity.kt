@@ -6,7 +6,11 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -32,6 +36,38 @@ class AddDeckActivity : AppCompatActivity() {
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
 
+        fun hideKeyboardFromInputText() {
+            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(inputTitle.windowToken, 0)
+        }
+
+        //TextWatcher would not work from another class. Current workaround is setting via. the Widgets
+        inputTitle.addTextChangedListener(object: TextWatcher {
+            val bad_words: MutableList<String> = mutableListOf()
+
+            init { //Resources gathered from www.bannedwordlist.com
+                resources.openRawResource(R.raw.swear_words).bufferedReader().forEachLine { line ->
+                    bad_words.add(line)
+                }
+            }
+
+            override fun afterTextChanged(currentText: Editable?) {
+                val current: String = currentText.toString() ?: ""
+                val currentBadWords = current.findAnyOf(bad_words, 0, ignoreCase = true) //check if current has any bad words in it
+                if (current.length ?: 0 > 10) {
+                    inputTitle.setText(currentText?.substring(0, 10)) //inputTitle.setSelection(10)
+                    hideKeyboardFromInputText()
+                    Snackbar.make(findViewById(android.R.id.content), "Title cannot exceed 10 Characters", Snackbar.LENGTH_SHORT).show()
+                }
+                if (currentBadWords != null) {
+                    val newText = current.replace(currentBadWords.second, "", true)
+                    inputTitle.setText(newText)
+                    hideKeyboardFromInputText()
+                    Snackbar.make(findViewById(android.R.id.content), "Innapropriate Content is Not Allowed!", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}})
 
         //if activity started from recycler item, then collect the Deck object
         val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
