@@ -8,14 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
-
+import java.util.logging.Handler
 
 
 //ViewAdapter
@@ -31,33 +29,40 @@ class DeckRecyclerAdapter(context: Context) :
     override fun onBindViewHolder(holder: DeckViewHolder, position: Int) {
         val item = decks[position]
 
-        Log.i("wow", "item is ${item.title} and is: ${item.completed}")
 
-        holder.checkBox.isChecked = item.completed
+        holder.apply {
 
-        Log.i("wow", "${holder.checkBox.isChecked} and ${item.completed}")
-        holder.bind(item)
-        //can holder.apply everything
-        //manages individual (set here to allow prioritising different decks, i.e. dates)
-        holder.layout.setOnLongClickListener {view ->
-            val intent = Intent(view.context, AddDeckActivity::class.java).apply {
-                putExtra(DeckPassedItemKey, item)
+            //For reusable/switching of items, set the checkbox to the current completed status.
+            checkBox.setOnClickListener(null)
+
+            bind(item) 
+
+
+            Log.i("wow", "onBindViewHolder -> ${item.title} is complete? ${item.completed} and checkbox is ${checkBox.isChecked}")
+
+            //manages individual onClick (set here to allow prioritising different decks, i.e. dates)
+            layout.setOnLongClickListener {view ->
+                val intent = Intent(view.context, AddDeckActivity::class.java).apply {
+                    putExtra(DeckPassedItemKey, item)
+                }
+                //cast to MainActivity since it is observing any changes to Decks. Therefore, it will deal with change.
+                (mContext as MainActivity).startActivityForResult(intent, AddDeckActivityStartForResult)
+                true
             }
-            //cast to MainActivity since it is observing any changes to Decks. Therefore, it will deal with change.
-            (mContext as MainActivity).startActivityForResult(intent, AddDeckActivityStartForResult)
-            true
-        }
 
-        //send Broadcast to MainActivity for globalViewModel to update the completed parametre for Deck (LocalBroadcastManager for security purposes)
-        //isue in non-complete where if ticked to hide it will also automatically check the next box
-        holder.checkBox.setOnCheckedChangeListener { view, isChecked ->
-            item.completed = isChecked
-            Log.i("wow", "is checked: ${isChecked} and the UUID is ${item.id}")
-            val intent = Intent().apply {
-                setAction(changeCompletedForDeck)
-                putExtra(changeCompletedForDeckItemID, item)
+
+            //send Broadcast to MainActivity for globalViewModel to update the completed parametre for Deck (LocalBroadcastManager for security purposes)
+            //isue in non-complete where if ticked to hide it will also automatically check the next box
+            checkBox.setOnCheckedChangeListener { checkbox: CompoundButton, _isChecked: Boolean ->
+                item.completed = _isChecked
+                val intent = Intent().apply {
+                    setAction(changeCompletedForDeck)
+                    putExtra(changeCompletedForDeckItemID, item)
+                }
+                LocalBroadcastManager.getInstance(checkbox.context).sendBroadcast(intent)
             }
-            LocalBroadcastManager.getInstance(view.context).sendBroadcast(intent)
+
+            checkBox.isChecked = item.completed
         }
     }
 
@@ -85,6 +90,7 @@ class DeckRecyclerAdapter(context: Context) :
         fun bind(item: Deck) {
             title.text = item.title
             date.text = Deck.getStringFromCalendar(item.date)
+            Log.i("wow", "onBind -> ${item.title} is complete? ${item.completed} and checkbox is ${checkBox.isChecked}")
         }
 
     }

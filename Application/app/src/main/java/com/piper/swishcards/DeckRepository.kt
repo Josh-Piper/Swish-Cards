@@ -8,14 +8,19 @@ import java.util.*
 class DeckRepository(private val deckDao: DeckDAO) {
 
     private var allDecks = MediatorLiveData<List<Deck>>() //MutableLiveData<List<Deck>>() //instantiate object
+    private var oldSource: LiveData<List<Deck>> = MutableLiveData()
 
     fun getAllDecks(): LiveData<List<Deck>> = allDecks //Repository handles livedata transmission. ViewModel references the actual Data. When allDecks data is changed, should be LiveData and also sortable
 
 
     //changes source of livedata.
-    private fun loadLiveData(sort: LiveData<List<Deck>>){
-        allDecks.addSource(sort) {
-            allDecks.value = it
+    private fun loadLiveData(newSource: LiveData<List<Deck>>){
+        //issue here as it will listen to all the sources and compile them together. Only require a single source to be switched out.
+        allDecks.removeSource(oldSource)
+        oldSource = newSource
+        allDecks.addSource(newSource) { newDeck ->
+            allDecks.value = newDeck
+
         }
     }
 
