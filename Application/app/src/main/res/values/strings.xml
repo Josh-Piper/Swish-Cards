@@ -21,4 +21,8 @@
     <string name="compose_text_1">Flash Card application</string>
     <string name="compose_text_2">The following is a demonstration of using Android Compose to create a Flash card</string>
     <string name="compose_btn_next_card">Next Card</string>
+    <string name="download">Download Decks</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="tba">TBA</string>
+    <string name="delete_completed_decks">Delete Complete Decks</string>
 </resources>

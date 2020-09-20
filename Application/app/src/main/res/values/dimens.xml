@@ -7,5 +7,7 @@
     <dimen name="med_text_size">35sp</dimen>
     <dimen name="nav_bar_height">60dp</dimen>
     <dimen name="small_text_size">20sp</dimen>
+    <dimen name="large_margin_size">75dp</dimen>
+    <dimen name="one_dp">1dp</dimen>
     <item name="default_scale_checkbox" type="dimen" format="float">1.5</item>
 </resources>

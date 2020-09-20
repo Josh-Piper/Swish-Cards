@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:orientation="vertical"
+    android:background="@color/background_color"
+    tools:context=".SettingsActivity">
+
+    <include layout="@layout/toolbar" />
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:baselineAligned="false"
+        android:layout_weight="8"
+        android:weightSum="15"
+        android:layout_height="0dp">
+
+        <LinearLayout style="@style/settings_items">
+
+            <TextView
+                style="@style/settings_item_text"
+                android:text="@string/delete_completed_decks"/>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/gobal_checkbox_tablerow">
+
+                <CheckBox
+                    android:id="@+id/delete_complete_decks"
+                    style="@style/global_checkbox" />
+
+            </TableRow>
+
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/settings_items">
+
+
+            <TextView
+                style="@style/settings_item_text"
+                android:text="@string/light_mode"/>
+
+            <TableRow style="@style/gobal_checkbox_tablerow">
+
+                <CheckBox
+                    android:id="@+id/light_mode_checkbox"
+                    style="@style/global_checkbox" />
+
+            </TableRow>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/settings_items">
+
+            <TextView
+                android:text="@string/tba"
+                style="@style/settings_item_text" />
+
+            <TableRow style="@style/gobal_checkbox_tablerow">
+
+                <CheckBox
+                    android:id="@+id/Language_Setting"
+                    style="@style/global_checkbox"  />
+
+            </TableRow>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:paddingHorizontal="@dimen/small_text_size"
+        android:layout_margin="@dimen/default_margin_size"
+        android:layout_height="0dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/small_text_size"
+        android:text="@string/download"
+        android:background="@drawable/downloaddecks"
+        android:layout_weight="1"
+        android:layout_gravity="bottom|center"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:id="@+id/bottom_navigation_view"
+        app:menu="@menu/bottom_nav_bar"
+        android:background="@color/background_color"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+
+
+</LinearLayout>

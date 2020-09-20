@@ -38,21 +38,12 @@
 
     </LinearLayout>
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/default_margin_size"
-        android:layout_gravity="end"
-        android:layout_weight="2"
-        android:gravity="end|center_vertical">
+    <TableRow style="@style/gobal_checkbox_tablerow"
+        android:paddingEnd="@dimen/default_margin_size">
 
         <CheckBox
             android:id="@+id/fragment_deck_item_selected"
-            android:buttonTint="@color/main_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleY="@dimen/default_scale_checkbox"
-            android:scaleX="@dimen/default_scale_checkbox"
-            android:gravity="end|center_vertical" />
+            style="@style/global_checkbox"  />
+
     </TableRow>
 </LinearLayout>

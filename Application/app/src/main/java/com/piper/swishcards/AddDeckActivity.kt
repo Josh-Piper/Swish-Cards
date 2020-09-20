@@ -1,29 +1,30 @@
 package com.piper.swishcards
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
+
 
 class AddDeckActivity : AppCompatActivity() {
     private lateinit var doneBtn: Button
     private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
     private lateinit var inputDate: EditText
+    private lateinit var bottomNavigation: BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +37,25 @@ class AddDeckActivity : AppCompatActivity() {
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
 
+        //Bottom navigational bar handling
+        bottomNavigation = findViewById(R.id.bottom_navigation_view)
+        bottomNavigation.setOnNavigationItemReselectedListener {
+            val intent = when (it.itemId) {
+                R.id.nav_decks -> {} //do nothing as current setting is MainActivity
+                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
+                R.id.nav_back -> {}
+                else -> {}
+            }
+            startActivity(intent as Intent?)
+        }
+
         fun hideKeyboardFromInputText() {
-            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(inputTitle.windowToken, 0)
         }
 
         //TextWatcher would not work from another class. Current workaround is setting via. the Widgets
-        inputTitle.addTextChangedListener(object: TextWatcher {
+        inputTitle.addTextChangedListener(object : TextWatcher {
             val bad_words: MutableList<String> = mutableListOf()
 
             init { //Resources gathered from www.bannedwordlist.com
@@ -53,21 +66,35 @@ class AddDeckActivity : AppCompatActivity() {
 
             override fun afterTextChanged(currentText: Editable?) {
                 val current: String = currentText.toString() ?: ""
-                val currentBadWords = current.findAnyOf(bad_words, 0, ignoreCase = true) //check if current has any bad words in it
+                val currentBadWords = current.findAnyOf(
+                    bad_words,
+                    0,
+                    ignoreCase = true
+                ) //check if current has any bad words in it
                 if (current.length ?: 0 > 10) {
                     inputTitle.setText(currentText?.substring(0, 10)) //inputTitle.setSelection(10)
                     hideKeyboardFromInputText()
-                    Snackbar.make(findViewById(android.R.id.content), "Title cannot exceed 10 Characters", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        findViewById(R.id.content),
+                        "Title cannot exceed 10 Characters",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
                 if (currentBadWords != null) {
                     val newText = current.replace(currentBadWords.second, "", true)
                     inputTitle.setText(newText)
                     hideKeyboardFromInputText()
-                    Snackbar.make(findViewById(android.R.id.content), "Innapropriate Content is Not Allowed!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        findViewById(R.id.content),
+                        "Innapropriate Content is Not Allowed!",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}})
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
 
         //if activity started from recycler item, then collect the Deck object
         val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
@@ -94,7 +121,7 @@ class AddDeckActivity : AppCompatActivity() {
             }
         }
 
-        doneBtn.setOnClickListener {view ->
+        doneBtn.setOnClickListener { view ->
             val replyIntent = Intent()
             var title: String = inputTitle.text.toString()
             var due: String = inputDate.text.toString()
@@ -108,13 +135,22 @@ class AddDeckActivity : AppCompatActivity() {
                     Log.i("hello", "${deck.date}")
                 }
 
-                val addDeck = Deck(title = title, date = Deck.getCalendarFromAU(due), completed = false) //create a new Deck object with the EditText values
+                val addDeck = Deck(
+                    title = title,
+                    date = Deck.getCalendarFromAU(due),
+                    completed = false
+                ) //create a new Deck object with the EditText values
                 replyIntent.putExtra(ADD_DECK_REPLY, deck ?: addDeck)
-                setResult(Activity.RESULT_OK, replyIntent)
+                setResult(RESULT_OK, replyIntent)
                 finish()
             } else {
-                Snackbar.make(view, "Invalid Input! check everything is correct ", Snackbar.LENGTH_LONG).setActionTextColor(
-                    Color.RED).show()
+                Snackbar.make(
+                    view,
+                    "Invalid Input! check everything is correct ",
+                    Snackbar.LENGTH_LONG
+                ).setActionTextColor(
+                    Color.RED
+                ).show()
             }
         }
 
@@ -123,7 +159,7 @@ class AddDeckActivity : AppCompatActivity() {
             if (deck != null) {
                 deck.title = "deleted_object"
                 val intent = Intent().apply { putExtra(ADD_DECK_REPLY, deck) }
-                setResult(Activity.RESULT_OK, intent)
+                setResult(RESULT_OK, intent)
                 finish()
             }
         }

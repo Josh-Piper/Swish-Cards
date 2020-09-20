@@ -17,7 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationMenu
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.lang.Exception
 import java.security.Policy
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fab: FloatingActionButton
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: DeckRecyclerAdapter
+    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var broadcastReceiver: BroadcastReceiver
     private val AddDeckActivityResultCode = 25
 
@@ -42,6 +46,18 @@ class MainActivity : AppCompatActivity() {
         globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)
         fab = findViewById(R.id.main_activity_fab)
 
+        //Bottom navbar implementation
+        bottomNavigation = findViewById(R.id.bottom_navigation_view)
+        bottomNavigation.setOnNavigationItemSelectedListener {
+            val intent = when (it.itemId) {
+                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
+                else -> null//do nothing as current setting is MainActivity
+            }
+            try { startActivity(intent as Intent?) } catch (e: Exception) { Log.i("Exception", "Exception: $e occurred") }
+            true
+        }
+
+
         //Context Menu
         contextMenuText = findViewById(R.id.context_menu_sort_by_text)
         registerForContextMenu(contextMenuText)
@@ -53,7 +69,6 @@ class MainActivity : AppCompatActivity() {
                //this is called when adding a new Deck after hiding one for some reason. WHYYY
                if (intent?.action == DeckRecyclerAdapter.changeCompletedForDeck) {
                    val deck = intent?.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
-                   Log.i("wow", "${deck?.title}")
                    deck?.let { deck ->
                        globalViewModel.update(deck)
                    }
