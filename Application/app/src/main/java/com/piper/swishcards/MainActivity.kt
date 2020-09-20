@@ -92,9 +92,7 @@ class MainActivity : AppCompatActivity() {
         //Define adapter for recycler view
         recycler = findViewById(R.id.main_activity_reclyer_view)
         adapter = DeckRecyclerAdapter(this)
-
-        //Delete all Decks stored in room ToDo ONLY ACTIVE DURING DEVELOPMENT STAGES
-        globalViewModel.deleteAllDecks()
+        
 
         //start application is sorting alpha ascending mode
         globalViewModel.sortBy(Sort.ALPHA_ASC)
