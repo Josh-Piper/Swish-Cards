@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3B3B3B</color>
+    <color name="colorPrimaryDark">#0C0C0C</color>
+    <color name="colorAccent">#168BBF</color>
+    <color name="white">#ffffff</color>
+    <color name="lightGrayCorneredBox">#4D4D4D</color>
+    <color name="hintTextColor">#F1F1F1</color>
+    <color name="background_color">#3B3B3B</color>
+    <color name="nav_bottom_background_colour">#3B3B3B</color>
+    <color name="main_text_color">#ffffff</color>
+    <color name="subtitle_text_color">#333232</color>
+    <color name="add_button_color">#099BDB</color>
+    <color name="border_navi">#707070</color>
+    <color name="delete_color">#FFA1A1</color>
+    <color name="download_decks">#2185B1</color>
+    <color name="default_text_colour">#ffffff</color>
+    <color name="top_bar_color">#3D3C3C</color>
+    <color name="checkbox_color">#ffffff</color>
+</resources>

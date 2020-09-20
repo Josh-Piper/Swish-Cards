@@ -43,10 +43,9 @@
 
         <LinearLayout style="@style/settings_items">
 
-
             <TextView
                 style="@style/settings_item_text"
-                android:text="@string/light_mode"/>
+                android:text="@string/change_color_pref"/>
 
             <TableRow style="@style/gobal_checkbox_tablerow">
 
@@ -61,8 +60,8 @@
         <LinearLayout style="@style/settings_items">
 
             <TextView
-                android:text="@string/tba"
-                style="@style/settings_item_text" />
+                style="@style/settings_item_text"
+                android:text="@string/tba"/>
 
             <TableRow style="@style/gobal_checkbox_tablerow">
 
@@ -96,7 +95,7 @@
         android:layout_width="match_parent"
         android:id="@+id/bottom_navigation_view"
         app:menu="@menu/bottom_nav_bar"
-        android:background="@color/background_color"
+        android:background="@color/nav_bottom_background_colour"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         android:layout_weight="1"

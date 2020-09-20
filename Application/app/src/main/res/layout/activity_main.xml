@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="9"
-                android:orientation="vertical"></androidx.recyclerview.widget.RecyclerView>
+                android:orientation="vertical"/>
 
 
             <LinearLayout
@@ -49,13 +49,13 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/default_text_size"
-                        android:textColor="@color/lightGrayCorneredBox"
-                        android:text="@string/sort_by_title" />
+                        android:textSize="@dimen/small_text_size"
+                        android:text="@string/sort_by_title"
+                        android:textColor="@color/lightGrayCorneredBox" />
 
-                    <!--Rotating Special Text Bar -->
+
                     <TextView
                         android:layout_width="match_parent"
                         android:id="@+id/context_menu_sort_by_text"
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/bottom_navigation_view"
                 app:menu="@menu/bottom_nav_bar"
-                android:background="@color/background_color"
+                android:background="@color/nav_bottom_background_colour"
                 app:itemTextColor="@color/white"
                 app:itemIconTint="@color/white"
                 android:layout_weight="1"

@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@drawable/boxnavigationbar"
+    android:background="@color/top_bar_color"
     android:orientation="horizontal">
 
     <ImageView

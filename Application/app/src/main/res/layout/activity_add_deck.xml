@@ -137,7 +137,7 @@
         android:layout_width="match_parent"
         app:menu="@menu/bottom_nav_bar"
         android:id="@+id/bottom_navigation_view"
-        android:background="@color/background_color"
+        android:background="@color/nav_bottom_background_colour"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         android:layout_weight="1.5"

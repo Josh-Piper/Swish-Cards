@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
 
     //lightModeDetails
-    var lightMode = false
+    var darkMode = false //if made into a login system. This information could be stored in a database. Currently stored in cached?
 
     //connect to the same Database/Repository as globalViewModel
     private val repository: DeckRepository

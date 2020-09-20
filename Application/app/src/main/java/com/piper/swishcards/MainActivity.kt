@@ -13,6 +13,7 @@ import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +43,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         Log.i("wow", "I am the creator of all things and AM CALLED!")
+
+        //Get current colour scenario
+        val lightModeKey = getString(R.string.light_mode_pref_key)
+        val sharedPref = this?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        when (sharedPref.getBoolean(lightModeKey, false)) {
+            false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
 
         //basic declarations. UI + ViewModels + RecyclerViews(adapter)
         globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)

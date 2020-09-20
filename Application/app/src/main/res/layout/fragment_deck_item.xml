@@ -20,13 +20,12 @@
         android:layout_marginStart="@dimen/default_margin_size"
         android:layout_height="match_parent">
 
-
         <TextView
             android:id="@+id/fragment_deck_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
-            android:textColor="@color/white"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/default_text_colour"
             tools:text="@string/placeholder" />
 
         <TextView
@@ -43,7 +42,7 @@
 
         <CheckBox
             android:id="@+id/fragment_deck_item_selected"
-            style="@style/global_checkbox"  />
+            style="@style/global_checkbox" />
 
     </TableRow>
 </LinearLayout>
