@@ -25,6 +25,9 @@ interface DeckDAO {
     @Query("SELECT * from deck_table ORDER BY date ASC")
     fun getDecksSortedByDueDate(): LiveData<List<Deck>>
 
+    @Query("DELETE FROM deck_table WHERE completed = 1")
+    fun deleteAllCompletedDecks()
+
 
     //Modifying
     @Insert(onConflict = OnConflictStrategy.ABORT)

@@ -20,8 +20,11 @@ class DeckRepository(private val deckDao: DeckDAO) {
         oldSource = newSource
         allDecks.addSource(newSource) { newDeck ->
             allDecks.value = newDeck
-
         }
+    }
+
+    suspend fun deleteAllCompletedDecks() {
+        deckDao.deleteAllCompletedDecks()
     }
 
     //Changes datasource of livedata

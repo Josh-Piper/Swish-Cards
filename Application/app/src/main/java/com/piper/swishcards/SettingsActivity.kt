@@ -1,11 +1,15 @@
 package com.piper.swishcards
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.CheckBox
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
@@ -22,10 +26,18 @@ class SettingsActivity : AppCompatActivity() {
 
         deleteCompletedDecks = findViewById(R.id.delete_complete_decks)
         lightMode = findViewById(R.id.light_mode_checkbox)
-        settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
+        settingsViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(SettingsViewModel::class.java)
+
+        //Create DialogPrompt to ensure the user wants to delete all Decks
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Are You Sure You Want to DELETE All Decks")
+            .setPositiveButton("Yes") { x, y ->
+                settingsViewModel.deleteAllCompletedDecks(); Toast.makeText(this, "Successfully Delete All Completed Decks", Toast.LENGTH_SHORT).show() } //delete all decks from Repository and Toast to show completition
+            .setNegativeButton("No", null)
 
         Log.i("wow", "global Light mode: ${settingsViewModel.lightMode}")
 
+        //Cache the value from SettingsViewModel according to the current colour sceme
         lightMode.isChecked = settingsViewModel.lightMode
 
         bottomNavigation = findViewById(R.id.bottom_navigation_view)
@@ -41,7 +53,9 @@ class SettingsActivity : AppCompatActivity() {
 
 
         deleteCompletedDecks.setOnCheckedChangeListener { compoundButton, isChecked ->
-            //do something
+
+            builder.show()
+            deleteCompletedDecks.isChecked = false
         }
 
         lightMode.setOnCheckedChangeListener { compoundButton, isChecked ->

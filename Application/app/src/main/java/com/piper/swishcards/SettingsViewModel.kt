@@ -4,8 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+
+    //lightModeDetails
     var lightMode = false
 
     //connect to the same Database/Repository as globalViewModel
@@ -18,10 +22,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         allDecks = repository.getAllDecks() //should this be observing
     }
 
-
-    //lightModeDetails
-
-
     //Delete Completed Decks
+    fun deleteAllCompletedDecks() = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAllCompletedDecks()
+    }
+
+
+
+
+
 
 }
