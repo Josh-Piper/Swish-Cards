@@ -165,6 +165,10 @@ class AddDeckActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        super.onBackPressed()
+    }
     companion object {
         const val ADD_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.REPLY"
         const val MODIFY_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.MODIFY.REPLY"

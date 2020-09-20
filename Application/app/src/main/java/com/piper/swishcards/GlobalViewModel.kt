@@ -15,7 +15,7 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         val decksDao = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO()
-        repository = DeckRepository(deckDao = decksDao)
+        repository = DeckRepository.get(decksDao)
         allDecks = repository.getAllDecks() //should this be observing
     }
 

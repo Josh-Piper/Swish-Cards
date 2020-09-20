@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 import java.security.Policy
 
@@ -48,12 +49,13 @@ class MainActivity : AppCompatActivity() {
 
         //Bottom navbar implementation
         bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemSelectedListener {
-            val intent = when (it.itemId) {
+        bottomNavigation.setOnNavigationItemSelectedListener { navButton ->
+            val intent = when (navButton.itemId) {
                 R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
-                else -> null//do nothing as current setting is MainActivity
+                else -> { null; val s = Snackbar.make(bottomNavigation, "Currently on the Main Screen!", Snackbar.LENGTH_SHORT); s.setAction("Dismiss") { s.dismiss() }; s.show()}  //do nothing as current setting is MainActivity
             }
             try { startActivity(intent as Intent?) } catch (e: Exception) { Log.i("Exception", "Exception: $e occurred") }
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout)
             true
         }
 

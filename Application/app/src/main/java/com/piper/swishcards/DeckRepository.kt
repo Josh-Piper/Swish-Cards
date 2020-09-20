@@ -50,5 +50,12 @@ class DeckRepository(private val deckDao: DeckDAO) {
     suspend fun deleteAllDecks() {
         deckDao.deleteAll()
     }
+    companion object {
+        private var deckRepo: DeckRepository? = null
 
+        fun get(decksDAO: DeckDAO): DeckRepository {
+            if (deckRepo == null) deckRepo = DeckRepository(decksDAO)
+            return (deckRepo as DeckRepository)
+        }
+    }
 }
