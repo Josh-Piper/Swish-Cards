@@ -27,6 +27,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         repository.deleteAllCompletedDecks()
     }
 
+    fun deleteAllDecks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllDecks()
+        }
+    }
+
 
 
 

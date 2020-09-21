@@ -17,4 +17,5 @@
     <color name="default_text_colour">#ffffff</color>
     <color name="top_bar_color">#3D3C3C</color>
     <color name="checkbox_color">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

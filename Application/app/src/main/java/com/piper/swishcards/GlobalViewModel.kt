@@ -39,10 +39,4 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
     fun delete(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(deck)
     }
-
-    fun deleteAllDecks() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAllDecks()
-        }
-    }
 }

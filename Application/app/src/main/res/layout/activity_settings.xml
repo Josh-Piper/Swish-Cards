@@ -25,6 +25,22 @@
 
             <TextView
                 style="@style/settings_item_text"
+                android:text="@string/delete_all_decks"/>
+
+            <TableRow style="@style/gobal_checkbox_tablerow">
+
+                <CheckBox
+                    android:id="@+id/delete_all_decks"
+                    style="@style/global_checkbox"  />
+
+            </TableRow>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/settings_items">
+
+            <TextView
+                style="@style/settings_item_text"
                 android:text="@string/delete_completed_decks"/>
 
             <TableRow
@@ -72,6 +88,7 @@
             </TableRow>
 
         </LinearLayout>
+
 
 
 

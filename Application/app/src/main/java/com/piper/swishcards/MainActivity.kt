@@ -10,10 +10,16 @@ import android.os.Bundle
 import android.text.PrecomputedText
 import android.util.Log
 import android.view.ContextMenu
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,11 +27,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 import java.security.Policy
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var globalViewModel: GlobalViewModel
     private lateinit var contextMenuText: TextView
@@ -35,12 +42,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var broadcastReceiver: BroadcastReceiver
     private val AddDeckActivityResultCode = 25
-
+    private lateinit var drawer: DrawerLayout
+    private lateinit var topBarNav: NavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Topbar navigational drawer declarations
+        drawer = findViewById(R.id.drawer)
+        topBarNav = findViewById(R.id.topbar_nav)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+       //Top Bar / Navigational Drawer logic
+        topBarNav.bringToFront()
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        topBarNav.setCheckedItem(R.id.drawer_decks)
+
 
         Log.i("wow", "I am the creator of all things and AM CALLED!")
 
@@ -92,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         //Define adapter for recycler view
         recycler = findViewById(R.id.main_activity_reclyer_view)
         adapter = DeckRecyclerAdapter(this)
-        
+
 
         //start application is sorting alpha ascending mode
         globalViewModel.sortBy(Sort.ALPHA_ASC)
@@ -175,11 +198,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
+
+
+    }
     //Destroy the BroadcastReceiver
     override fun onDestroy() {
         Log.i("wow", "I am called (THE DESTROYER)")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        Log.i("wow", "onNaviItemSelected")
+        when (item.itemId) {
+            R.id.drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+            else -> null //do nothing
+        }
+        return true
     }
 }
 

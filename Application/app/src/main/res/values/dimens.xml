@@ -9,5 +9,6 @@
     <dimen name="small_text_size">20sp</dimen>
     <dimen name="large_margin_size">75dp</dimen>
     <dimen name="one_dp">1dp</dimen>
+    <dimen name="scale_card">2</dimen>
     <item name="default_scale_checkbox" type="dimen" format="float">1.5</item>
 </resources>

@@ -18,6 +18,7 @@ import java.lang.Exception
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var deleteCompletedDecks: CheckBox
+    private lateinit var deleteAllDecks: CheckBox
     private lateinit var lightMode: CheckBox
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var settingsViewModel: SettingsViewModel
@@ -27,8 +28,10 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         deleteCompletedDecks = findViewById(R.id.delete_complete_decks)
+        deleteAllDecks = findViewById(R.id.delete_all_decks)
         lightMode = findViewById(R.id.light_mode_checkbox)
         settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java) //ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(SettingsViewModel::class.java) not needed as there are no additional parametres
+        var proceedWithRequest: SETTINGS = SETTINGS.INVALID
 
         val lightModeKey = getString(R.string.light_mode_pref_key)
 
@@ -39,17 +42,20 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        fun resetAction() { proceedWithRequest = SETTINGS.INVALID; deleteAllDecks.isChecked = false; deleteCompletedDecks.isChecked = false; }
+
         //Create DialogPrompt to ensure the user wants to delete all Decks
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Are You Sure You Want to DELETE All Decks")
-            .setPositiveButton("Yes") { x, y ->
-                settingsViewModel.deleteAllCompletedDecks(); Toast.makeText(
-                this,
-                "Successfully Delete All Completed Decks",
-                Toast.LENGTH_SHORT
-            ).show()
+        builder.setTitle("Please Confirm This Request!").setPositiveButton("Yes") { _, _ ->
+            when (proceedWithRequest) {
+                SETTINGS.DELETE_COMPLETED -> settingsViewModel.deleteAllCompletedDecks()
+                SETTINGS.DELETE_ALL -> settingsViewModel.deleteAllDecks()
+                else -> null
+            }
+            Toast.makeText(this, "Successfully Completed", Toast.LENGTH_SHORT).show()
+            resetAction()
             } //delete all decks from Repository and Toast to show completition
-            .setNegativeButton("No", null)
+            .setNegativeButton("No") { _, _ -> resetAction() }
 
         Log.i("wow", "global Light mode: ${settingsViewModel.darkMode}")
 
@@ -84,19 +90,15 @@ class SettingsActivity : AppCompatActivity() {
             true
         }
 
+        deleteCompletedDecks.setOnClickListener { _ ->
+            proceedWithRequest = SETTINGS.DELETE_COMPLETED; builder.show() }
 
-        deleteCompletedDecks.setOnCheckedChangeListener { compoundButton, isChecked ->
-
-            builder.show()
-            deleteCompletedDecks.isChecked = false
-        }
+        deleteAllDecks.setOnClickListener { _ ->
+            proceedWithRequest = SETTINGS.DELETE_ALL; builder.show() }
 
         lightMode.setOnCheckedChangeListener { compoundButton, isChecked ->
-
-            Log.i("wow", "isChecked: $isChecked")
             sharedPref.edit().putBoolean(lightModeKey, isChecked).commit()
             settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
-            Log.i("wow", "globalView LightMide: ${settingsViewModel.darkMode}")
             updateColourScheme()
         }
     }

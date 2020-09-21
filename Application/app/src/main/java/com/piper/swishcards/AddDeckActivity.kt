@@ -11,10 +11,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -25,7 +29,6 @@ class AddDeckActivity : AppCompatActivity() {
     private lateinit var inputTitle: EditText
     private lateinit var inputDate: EditText
     private lateinit var bottomNavigation: BottomNavigationView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

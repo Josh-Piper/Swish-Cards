@@ -26,4 +26,10 @@
     <string name="delete_completed_decks">Delete Complete Decks</string>
     <string name="preference_file_key">com.piper.josh.swish.cards.2020.preferences_file_key</string>
     <string name="light_mode_pref_key">com.piper.josh.swish.cards.light_mode_pref_key</string>
+    <string name="delete_all_decks">Delete All Decks</string>
+    <string name="navigational_drawer_open">Open Navigational Drawer</string>
+    <string name="navigational_drawer_close">Close Navigational Drawer</string>
+    <string name="flash_cards">Flash Cards</string>
+    <string name="Decks">Swish Cards | Decks</string>
+    <string name="nav_bar_general_title">General</string>
 </resources>
