@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -23,16 +24,32 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 
-class AddDeckActivity : AppCompatActivity() {
+class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var doneBtn: Button
     private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
     private lateinit var inputDate: EditText
     private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var drawer: DrawerLayout
+    private lateinit var topBarNav: NavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_deck)
+
+        //Topbar navigational drawer declarations
+        drawer = findViewById(R.id.drawer)
+        topBarNav = findViewById(R.id.topbar_nav)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        //Top Bar / Navigational Drawer logic
+        topBarNav.bringToFront()
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        topBarNav.setNavigationItemSelectedListener(this)
 
         //attach all needed widgets to variables
         doneBtn = findViewById(R.id.activity_add_deck_done_button)
@@ -168,12 +185,16 @@ class AddDeckActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-
-        super.onBackPressed()
-    }
     companion object {
         const val ADD_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.REPLY"
-        const val MODIFY_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.MODIFY.REPLY"
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.drawer_decks -> finish()
+            R.id.drawer_settings -> { finish(); startActivity(Intent(this, SettingsActivity::class.java)) }
+            else -> null //do nothing
+        }
+        return true
     }
 }

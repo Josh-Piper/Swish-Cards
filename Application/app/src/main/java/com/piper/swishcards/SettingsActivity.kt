@@ -6,26 +6,48 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var deleteCompletedDecks: CheckBox
     private lateinit var deleteAllDecks: CheckBox
     private lateinit var lightMode: CheckBox
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var drawer: DrawerLayout
+    private lateinit var topBarNav: NavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        //Topbar navigational drawer declarations
+        drawer = findViewById(R.id.drawer)
+        topBarNav = findViewById(R.id.topbar_nav)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        //Top Bar / Navigational Drawer logic
+        topBarNav.bringToFront()
+        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        topBarNav.setNavigationItemSelectedListener(this)
+
 
         deleteCompletedDecks = findViewById(R.id.delete_complete_decks)
         deleteAllDecks = findViewById(R.id.delete_all_decks)
@@ -101,5 +123,13 @@ class SettingsActivity : AppCompatActivity() {
             settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
             updateColourScheme()
         }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.drawer_decks -> finish()
+            else -> null //do nothing
+        }
+        return true
     }
 }

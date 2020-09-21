@@ -32,4 +32,6 @@
     <string name="flash_cards">Flash Cards</string>
     <string name="Decks">Swish Cards | Decks</string>
     <string name="nav_bar_general_title">General</string>
+    <string name="Settings">Swish Cards | Settings</string>
+    <string name="AddDeck">Swish Cards | Add Decks</string>
 </resources>

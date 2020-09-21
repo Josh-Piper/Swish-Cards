@@ -51,18 +51,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Topbar navigational drawer declarations
+        //Topbar navigational drawer
         drawer = findViewById(R.id.drawer)
         topBarNav = findViewById(R.id.topbar_nav)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-       //Top Bar / Navigational Drawer logic
+        //Logic
         topBarNav.bringToFront()
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
-        topBarNav.setCheckedItem(R.id.drawer_decks)
+        topBarNav.setNavigationItemSelectedListener(this)
 
 
         Log.i("wow", "I am the creator of all things and AM CALLED!")
