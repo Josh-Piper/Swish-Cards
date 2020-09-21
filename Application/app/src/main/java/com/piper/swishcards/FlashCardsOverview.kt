@@ -3,11 +3,16 @@ package com.piper.swishcards
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
 class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -15,11 +20,16 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var bottomNavigation: BottomNavigationView
-    private lateinit var recycler: FlashCardRecyclerView
+    private lateinit var recycler: RecyclerView
+    private lateinit var cardsViewModel: CardViewModel
+    private lateinit var fab: FloatingActionButton
+    private lateinit var topBarTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flash_cards_overview)
+
+        topBarTitle = findViewById(R.id.topbar_title)
 
         //Topbar navigational drawer declarations
         drawer = findViewById(R.id.drawer)
@@ -27,17 +37,33 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        //declare ViewModel
+        cardsViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
+
         //get passed value
         val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
 
         if (deck != null) {
+            //set the top bar message
+            val message = String.format(getString(R.string.top_bar_title_message), deck.title)
+            topBarTitle.setText(message)
+
             //print all FlashCards existing to the recycler view
+            //if nothing passed then do nothing. This shouldnt work otherwies. Prompt error
+        } else {
+            finish()
+            Log.i("wow", "Error occurred")
         }
 
         //Set RecyclerView.
-
+        recycler = findViewById(R.id.recycler)
 
         //FAB
+        fab = findViewById(R.id.flash_cards_overview_fab)
+        fab.setOnClickListener {
+            //startActivityForResult
+            //use this sending to upload the card
+        }
         //ADD NEW FLASH CARD BUTTON!
 
 
@@ -61,10 +87,6 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
             }
             startActivity(intent as Intent?)
         }
-
-
-
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

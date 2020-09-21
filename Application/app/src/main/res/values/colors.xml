@@ -18,6 +18,7 @@
     <color name="top_bar_color">#006795</color>
     <color name="checkbox_color">#9E9E9E</color>
     <color name="black">#000000</color>
+    <color name="contrast_background">#3D5560</color>
 </resources>
 
 

@@ -35,4 +35,9 @@
     <string name="Settings">Swish Cards | Settings</string>
     <string name="AddDeck">Swish Cards | Add Decks</string>
     <string name="start">START</string>
+    <string name="top_bar_title_message">Hello, %1$s! You have %2$d new messages.</string>
+    <string name="EditingQuestion">Swish Cards | Editing Card</string>
+    <string name="question_text">Question</string>
+    <string name="type_of_question">Type of Question</string>
+    <string name="answer">Answer</string>
 </resources>

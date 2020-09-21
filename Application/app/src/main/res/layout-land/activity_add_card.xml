@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/drawwer"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    android:layout_height="match_parent"
+    tools:context=".AddCardActivity">
+
+<!--    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/header"
+        android:layout_gravity="start"
+        android:id="@+id/topbar_nav"
+        app:menu="@menu/nav_drawer"
+        />-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:background="@color/background_color"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="10"
+            android:weightSum="10"
+            android:layout_height="wrap_content">
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/top_bar_color"
+                android:layout_marginBottom="@dimen/default_margin_size"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:layout_weight="2"
+                    android:text="@string/EditingQuestion"
+                    android:textColor="#ffff"
+                    android:textSize="25sp" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="@dimen/med_margin_size"
+                android:layout_weight="10"
+                android:weightSum="10"
+                android:orientation="vertical"
+                android:background="@color/contrast_background"
+                android:layout_height="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="9"
+                    android:weightSum="10"
+                    android:layout_marginHorizontal="@dimen/med_margin_size"
+                    android:orientation="vertical"
+                    android:layout_height="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="3"
+                        android:orientation="horizontal"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:text="@string/type_of_question"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/med_text_size" />
+
+                        <Spinner
+                            android:id="@+id/activity_add_card_type_of_question"
+                            android:layout_width="match_parent"
+                            android:layout_marginHorizontal="@dimen/med_margin_size"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/boxedittext"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="@dimen/med_text_size" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:gravity="center"
+                            android:text="@string/question_text"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/med_text_size" />
+
+                        <EditText
+                            android:id="@+id/activity_add_card_question"
+                            android:layout_width="match_parent"
+                            android:layout_marginHorizontal="@dimen/med_margin_size"
+                            android:gravity="center|center_vertical"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/placeholder"
+                            android:background="@drawable/boxedittext"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="@dimen/med_text_size" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_height="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed-medium"
+                            android:gravity="center"
+                            android:text="@string/answer"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/med_text_size" />
+
+                        <EditText
+                            android:id="@+id/activity_add_card_answer"
+                            android:layout_width="match_parent"
+                            android:layout_marginHorizontal="@dimen/med_margin_size"
+                            android:gravity="center|center_vertical"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/placeholder"
+                            android:background="@drawable/boxedittext"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="@dimen/med_text_size" />
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="13"
+                        />
+
+                    <Button
+                        android:id="@+id/activity_add_card_done_button"
+                        android:layout_width="wrap_content"
+                        android:paddingHorizontal="@dimen/med_margin_size"
+                        android:background="@drawable/boxbuttonadd"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/add_button"
+                        android:layout_weight="2"
+                        android:textColor="@color/white"
+                        android:textSize="35sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/activity_add_card_delete_button"
+                        android:gravity="end"
+                        android:layout_marginEnd="@dimen/default_margin_size"
+                        android:textColor="@color/delete_color"
+                        android:layout_gravity="bottom"
+
+                        android:text="@string/delete_text"/>
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            app:menu="@menu/bottom_nav_bar"
+            android:id="@+id/bottom_navigation_view"
+            android:background="@color/nav_bottom_background_colour"
+            app:itemTextColor="@color/white"
+            app:itemIconTint="@color/white"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

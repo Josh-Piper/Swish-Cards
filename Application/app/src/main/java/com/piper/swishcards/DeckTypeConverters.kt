@@ -26,4 +26,15 @@ class DeckTypeConverters {
     fun fromCalendar(calendar: Calendar): Long {
         return calendar.timeInMillis
     }
+
+    @TypeConverter
+    fun toCardType(card: String): CardType? {
+        return CardType.valueOf(card)
+    }
+
+    @TypeConverter
+    fun fromCardType(card: CardType): String? {
+        return card.toString()
+    }
+
 }

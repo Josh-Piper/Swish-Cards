@@ -11,6 +11,7 @@ import java.util.*
 @Dao
 interface DeckDAO {
 
+    //All Deck interactions for deck_table
     //Sorting
     @Query("SELECT * from deck_table ORDER BY title ASC")
     fun getDecksSortedByAlphaAsc(): LiveData<List<Deck>>
@@ -28,7 +29,6 @@ interface DeckDAO {
     @Query("DELETE FROM deck_table WHERE completed = 1")
     fun deleteAllCompletedDecks()
 
-
     //Modifying
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(deck: Deck)
@@ -42,9 +42,35 @@ interface DeckDAO {
 
     @Query("DELETE FROM deck_table")
     suspend fun deleteAll()
+
+
+    //All Card interactions for card_table
+
+    @Query("DELETE FROM card_table")
+    suspend fun cardDeleteAll()
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateCard(card: FlashCard)
+
+    @Delete
+    suspend fun deleteCard(card: FlashCard)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertCard(card: FlashCard)
+
+    @Query("SELECT * FROM card_table WHERE parent_id = (:pid) ORDER BY question ASC")
+    fun sortCardsByParentID(pid: UUID): LiveData<List<FlashCard>>
+
+    @Query("SELECT * FROM card_table")
+    fun getAllCards(): LiveData<List<FlashCard>>
+
+
+    @Query("DELETE FROM card_table where parent_id = (:id)")
+    fun deleteAllCardsFromParent(id: UUID): LiveData<List<FlashCard>>
+
 }
 
-@Database(entities = [Deck::class], version = 6, exportSchema = false)
+@Database(entities = [Deck::class, FlashCard::class], version = 7, exportSchema = false)
 @TypeConverters(DeckTypeConverters::class)
 abstract class FlashCardDB : RoomDatabase() {
 

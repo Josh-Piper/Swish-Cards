@@ -6,3 +6,8 @@ enum class Sort {
     NON_COM,
     DUE_DATE
 }
+
+enum class SortCard {
+    ALL,
+    PARENT_ID
+}
