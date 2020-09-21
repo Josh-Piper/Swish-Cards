@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:weightSum="4"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/default_margin_size"
+        android:layout_weight="3"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/main_text_color"
+            android:layout_height="wrap_content"
+            tools:text="@string/placeholder"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:textColor="@color/main_text_color"
+            android:layout_height="wrap_content"
+            tools:text="@string/placeholder" />
+
+
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <TableRow style="@style/gobal_checkbox_tablerow"
+                android:paddingEnd="@dimen/default_margin_size">
+
+                <CheckBox
+                    android:id="@+id/fragment_deck_item_selected"
+                    style="@style/global_checkbox" />
+
+            </TableRow>
+        </LinearLayout>
+
+
+</LinearLayout>

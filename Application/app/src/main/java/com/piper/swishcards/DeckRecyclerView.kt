@@ -50,6 +50,14 @@ class DeckRecyclerAdapter(context: Context) :
                 true
             }
 
+            //Open FlashCard Overview
+            layout.setOnClickListener { view ->
+                val intent: Intent = Intent(view.context, FlashCardsOverview::class.java).apply {
+                    putExtra(passDeckToFlashCardOverview, item)
+                }
+                view.context.startActivity(intent)
+            }
+
 
             //send Broadcast to MainActivity for globalViewModel to update the completed parametre for Deck (LocalBroadcastManager for security purposes)
             //isue in non-complete where if ticked to hide it will also automatically check the next box
@@ -99,6 +107,7 @@ class DeckRecyclerAdapter(context: Context) :
         const val AddDeckActivityStartForResult = 1999
         const val DeckPassedItemKey = "deck_passed_from_deck_recycler_view"
         const val changeCompletedForDeck = "deck_passed_changing_boolean_for_completed"
+        const val passDeckToFlashCardOverview = "deck_transporting_to_flash_card_overview"
         const val changeCompletedForDeckItemID = "deck_passed_as_item_for_changing_completed_boolean"
     }
 }

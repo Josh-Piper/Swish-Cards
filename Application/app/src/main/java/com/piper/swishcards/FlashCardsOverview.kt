@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
@@ -14,6 +15,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var recycler: FlashCardRecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,22 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         topBarNav = findViewById(R.id.topbar_nav)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        //get passed value
+        val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
+
+        if (deck != null) {
+            //print all FlashCards existing to the recycler view
+        }
+
+        //Set RecyclerView.
+
+
+        //FAB
+        //ADD NEW FLASH CARD BUTTON!
+
+
+        
 
         //Top Bar / Navigational Drawer logic
         topBarNav.bringToFront()

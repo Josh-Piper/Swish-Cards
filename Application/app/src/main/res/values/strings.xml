@@ -34,4 +34,5 @@
     <string name="nav_bar_general_title">General</string>
     <string name="Settings">Swish Cards | Settings</string>
     <string name="AddDeck">Swish Cards | Add Decks</string>
+    <string name="start">START</string>
 </resources>

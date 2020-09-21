@@ -63,7 +63,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             val intent = when (it.itemId) {
                 R.id.nav_decks -> {} //do nothing as current setting is MainActivity
                 R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
-                R.id.nav_back -> {}
+                R.id.nav_back -> { finish() }
                 else -> {}
             }
             startActivity(intent as Intent?)

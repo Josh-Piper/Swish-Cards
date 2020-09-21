@@ -29,6 +29,10 @@
         android:background="@color/background_color"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
         <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -47,33 +51,53 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <LinearLayout
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="7"
             android:layout_height="wrap_content">
 
 
 
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
-            android:gravity="end"
+            android:layout_marginHorizontal="@dimen/default_margin_size"
+            android:gravity="start"
             android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/med_text_size"
+                android:paddingHorizontal="@dimen/default_margin_size"
+                android:text="@string/start"
+                android:background="@drawable/downloaddecks"
+                android:layout_gravity="bottom"/>
+
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="3"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/main_activity_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/default_margin_size"
+            android:layout_gravity="bottom"
             android:elevation="6dp"
             android:src="@drawable/ic_white_add_icon"
             app:fabSize="normal"
             app:maxImageSize="@dimen/fab_icon_size" />
 
         </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:layout_width="match_parent"
@@ -82,10 +106,13 @@
             android:background="@color/nav_bottom_background_colour"
             app:itemTextColor="@color/white"
             app:itemIconTint="@color/white"
-            android:layout_weight="1"
-            android:layout_height="0dp"/>
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 
     </LinearLayout>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
