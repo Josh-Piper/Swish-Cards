@@ -185,10 +185,6 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
     }
 
-    companion object {
-        const val ADD_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.REPLY"
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.drawer_decks -> finish()
@@ -196,5 +192,9 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             else -> null //do nothing
         }
         return true
+    }
+
+    companion object {
+        const val ADD_DECK_REPLY = "com.piper.swishcards.AddDeckActivity.REPLY"
     }
 }

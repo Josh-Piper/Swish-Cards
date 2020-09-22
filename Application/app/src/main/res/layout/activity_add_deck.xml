@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/placeholder"
                     android:background="@drawable/boxedittext"
-                    android:textColor="@color/main_text_color"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/med_text_size" />
 
                 <TextView
@@ -112,7 +112,7 @@
                     android:focusable="false"
                     android:hint="@string/due_date_hint"
                     android:background="@drawable/boxedittext"
-                    android:textColor="@color/main_text_color"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/med_text_size" />
 
             </LinearLayout>

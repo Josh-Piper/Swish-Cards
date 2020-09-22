@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var adapter: DeckRecyclerAdapter
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var broadcastReceiver: BroadcastReceiver
-    private val AddDeckActivityResultCode = 25
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -133,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener {
             startActivityForResult(
                 Intent(this, AddDeckActivity::class.java),
-                AddDeckActivityResultCode
+                AddDeckActivityRequestCode
             )
         }
 
@@ -176,7 +175,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onActivityResult(requestCode, resultCode, data)
 
         //FAB LISTENER
-        if (requestCode == AddDeckActivityResultCode && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AddDeckActivityRequestCode && resultCode == Activity.RESULT_OK) {
             //get Deck from FAB button and insert the new Deck into the ViewModel list
             data?.extras?.getParcelable<Deck>(AddDeckActivity.ADD_DECK_REPLY)?.let { deck ->
                 globalViewModel.insert(deck)
@@ -218,6 +217,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> null //do nothing
         }
         return true
+    }
+
+    companion object {
+        const val AddDeckActivityRequestCode = 25
     }
 }
 

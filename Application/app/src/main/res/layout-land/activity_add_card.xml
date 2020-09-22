@@ -4,20 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/drawwer"
+    android:id="@+id/nav_drawer"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:layout_height="match_parent"
     tools:context=".AddCardActivity">
 
-<!--    <com.google.android.material.navigation.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         app:headerLayout="@layout/header"
         android:layout_gravity="start"
         android:id="@+id/topbar_nav"
         app:menu="@menu/nav_drawer"
-        />-->
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/drawwer"
+    android:id="@+id/nav_drawer"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:layout_height="match_parent"
@@ -93,7 +93,8 @@
                             android:layout_marginHorizontal="@dimen/med_margin_size"
                             android:layout_height="match_parent"
                             android:background="@drawable/boxedittext"
-                            android:textColor="@color/main_text_color"
+                            android:textColor="@color/white"
+                            android:gravity="center"
                             android:textSize="@dimen/med_text_size" />
 
                     </LinearLayout>
@@ -120,11 +121,11 @@
                             android:id="@+id/activity_add_card_question"
                             android:layout_width="match_parent"
                             android:layout_marginHorizontal="@dimen/med_margin_size"
-                            android:gravity="center|center_vertical"
+                            android:gravity="center"
                             android:layout_height="wrap_content"
                             android:hint="@string/placeholder"
                             android:background="@drawable/boxedittext"
-                            android:textColor="@color/main_text_color"
+                            android:textColor="@color/white"
                             android:textSize="@dimen/med_text_size" />
 
                     </LinearLayout>
@@ -150,11 +151,11 @@
                             android:id="@+id/activity_add_card_answer"
                             android:layout_width="match_parent"
                             android:layout_marginHorizontal="@dimen/med_margin_size"
-                            android:gravity="center|center_vertical"
+                            android:gravity="center"
                             android:layout_height="wrap_content"
                             android:hint="@string/placeholder"
                             android:background="@drawable/boxedittext"
-                            android:textColor="@color/main_text_color"
+                            android:textColor="@color/white"
                             android:textSize="@dimen/med_text_size" />
 
                     </LinearLayout>

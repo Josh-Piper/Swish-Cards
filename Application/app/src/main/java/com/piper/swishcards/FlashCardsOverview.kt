@@ -24,6 +24,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var cardsViewModel: CardViewModel
     private lateinit var fab: FloatingActionButton
     private lateinit var topBarTitle: TextView
+    private lateinit var adapters: FlashCardRecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,16 +57,28 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         //Set RecyclerView.
+        adapters = FlashCardRecyclerView(this)
         recycler = findViewById(R.id.recycler)
+        recycler.apply {
+            layoutManager = LinearLayoutManager(this@FlashCardsOverview)
+            adapter = adapters
+        }
+
+        //dynamic observation
+        cardsViewModel.allCards.observeForever { cards ->
+            deck?.let { adapters.setCards(cards) }
+        }
 
         //FAB
         fab = findViewById(R.id.flash_cards_overview_fab)
         fab.setOnClickListener {
-            //startActivityForResult
-            //use this sending to upload the card
-        }
-        //ADD NEW FLASH CARD BUTTON!
+            val intent = Intent(this, AddCardActivity::class.java).apply {
+                putExtra(passDeckToCreateNewCard, deck) }
 
+            startActivityForResult(intent, createNewCardFromAddCardRequestCode)
+        }
+
+        //use call back function
 
         
 
@@ -78,14 +91,14 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         //Bottom navigational bar handling
         bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemReselectedListener {
-            val intent = when (it.itemId) {
-                R.id.nav_decks -> { finish() } //do nothing as current setting is MainActivity
-                R.id.nav_settings -> { finish(); Intent(this.baseContext, SettingsActivity::class.java) }
-                R.id.nav_back -> { finish() }
+        bottomNavigation.setOnNavigationItemSelectedListener {navBtn ->
+            val intent = when (navBtn.itemId) {
+                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
                 else -> null
             }
-            startActivity(intent as Intent?)
+            if (intent != null) startActivity(intent)
+            finish()
+            true
         }
     }
 
@@ -96,5 +109,21 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
             else -> null //do nothing
         }
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == createNewCardFromAddCardRequestCode && resultCode == RESULT_OK) {
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.addCardReply)?.let { card ->
+                cardsViewModel.insertCard(card)
+                //Add card to the deck
+            }
+        }
+    }
+
+    companion object {
+        const val createNewCardFromAddCardRequestCode = 1765
+        const val passDeckToCreateNewCard = "com.piper.josh.swish.cards.pass_deck_to_add_card"
     }
 }

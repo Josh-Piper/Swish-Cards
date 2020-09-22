@@ -1,22 +1,40 @@
 package com.piper.swishcards
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import org.w3c.dom.Text
 
-class FlashCardRecyclerView: RecyclerView.Adapter<FlashCardRecyclerView.FlashCardHolder>() {
+class FlashCardRecyclerView(context: Context): RecyclerView.Adapter<FlashCardRecyclerView.FlashCardHolder>() {
 
     var flashCards = emptyList<FlashCard>()
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getItemCount(): Int = flashCards.size
 
     override fun onBindViewHolder(holder: FlashCardHolder, position: Int) {
         val item = flashCards[position]
         holder.bind(item)
+
+        holder.apply {
+            layout.setOnLongClickListener {
+                //set startActivity to Update a Card's information here.
+                //Need to add a OnResult as well...
+                true
+            }
+        }
+        //set on LongClickListener for editing
+        //startActivity for blah blah
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashCardHolder {
-        TODO("Not yet implemented")
+        val view = inflater.inflate(R.layout.fragment_deck_item, parent, false)
+        return FlashCardHolder(view)
     }
 
     fun setCards(cards: List<FlashCard>) {
@@ -24,9 +42,16 @@ class FlashCardRecyclerView: RecyclerView.Adapter<FlashCardRecyclerView.FlashCar
     }
 
     class FlashCardHolder(v: View) : RecyclerView.ViewHolder(v) {
+        val layout: LinearLayout = v.findViewById(R.id.linear_layout_base)
+        val checkbox: CheckBox = v.findViewById(R.id.card_checkbox)
+        private val cardTitle: TextView = v.findViewById(R.id.card_title)
+
+
 
         fun bind(item: FlashCard) {
-            //do nothing
+            val title = if (item.question.length > 10) item.question.substring(0, 10) + ".." else item.question
+            checkbox.isChecked = item.completed
+            cardTitle.setText(title)
         }
     }
 

@@ -2,9 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/linear_layout_base"
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools"
     android:weightSum="4"
+    android:paddingVertical="@dimen/default_margin_size"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -17,16 +19,11 @@
         <TextView
             android:layout_width="match_parent"
             android:textSize="@dimen/small_text_size"
+            android:id="@+id/card_title"
             android:textColor="@color/main_text_color"
             android:layout_height="wrap_content"
             tools:text="@string/placeholder"
             />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:textColor="@color/main_text_color"
-            android:layout_height="wrap_content"
-            tools:text="@string/placeholder" />
 
 
 
@@ -41,7 +38,7 @@
                 android:paddingEnd="@dimen/default_margin_size">
 
                 <CheckBox
-                    android:id="@+id/fragment_deck_item_selected"
+                    android:id="@+id/card_checkbox"
                     style="@style/global_checkbox" />
 
             </TableRow>

@@ -10,7 +10,6 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
-<!--
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -19,7 +18,6 @@
         android:id="@+id/topbar_nav"
         app:menu="@menu/nav_drawer"
         />
--->
 
 
     <LinearLayout
@@ -58,7 +56,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:id="@+id/recycler"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:layout_height="wrap_content">
 
 
@@ -69,7 +67,8 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_marginHorizontal="@dimen/default_margin_size"
-            android:gravity="start"
+            android:gravity="start|bottom"
+            android:layout_marginBottom="@dimen/default_margin_size"
             android:layout_height="wrap_content">
 
             <Button
@@ -79,8 +78,7 @@
                 android:textSize="@dimen/med_text_size"
                 android:paddingHorizontal="@dimen/default_margin_size"
                 android:text="@string/start"
-                android:background="@drawable/downloaddecks"
-                android:layout_gravity="bottom"/>
+                android:background="@drawable/downloaddecks" />
 
             <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="3"/>
 
@@ -88,7 +86,6 @@
             android:id="@+id/flash_cards_overview_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:elevation="6dp"
             android:src="@drawable/ic_white_add_icon"
             app:fabSize="normal"

@@ -14,6 +14,7 @@ data class FlashCard(
     @ColumnInfo(name = "parent_id") var pid: UUID,
     @ColumnInfo(name = "question") var question: String,
     @ColumnInfo(name = "answer") var answer: String,
-    @ColumnInfo(name = "type") var type: CardType)
+    @ColumnInfo(name = "type") var type: CardType,
+    @ColumnInfo(name = "completed") var completed: Boolean)
     : Parcelable {
 }

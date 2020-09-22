@@ -65,12 +65,12 @@ interface DeckDAO {
     fun getAllCards(): LiveData<List<FlashCard>>
 
 
-    @Query("DELETE FROM card_table where parent_id = (:id)")
-    fun deleteAllCardsFromParent(id: UUID): LiveData<List<FlashCard>>
+    @Query("DELETE FROM card_table where parent_id=:pid")
+    fun deleteAllCardsFromParent(pid: UUID) //return nothing as it is deleting
 
 }
 
-@Database(entities = [Deck::class, FlashCard::class], version = 7, exportSchema = false)
+@Database(entities = [Deck::class, FlashCard::class], version = 8, exportSchema = false)
 @TypeConverters(DeckTypeConverters::class)
 abstract class FlashCardDB : RoomDatabase() {
 
