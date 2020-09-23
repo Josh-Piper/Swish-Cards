@@ -59,7 +59,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
 
+        ////////////////////
         //Get current colour scenario
+        //This is redundant/copied code from the Settings Activity.
+        //Needs refactoring
+        ///////////////////////
         val lightModeKey = getString(R.string.light_mode_pref_key)
         val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         when (sharedPref.getBoolean(lightModeKey, false)) {
@@ -83,16 +87,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             true
         }
 
-
         //Context Menu
+        //Registers the sorting menu.
         contextMenuText = findViewById(R.id.context_menu_sort_by_text)
         registerForContextMenu(contextMenuText)
 
         //Create broadcast listener and register the filters
+        //A Local Broadcast Listener isn't required as a callback function would be more appropriate
+        //used for learning purposes.
+        //For example, a Tablet may have better drawing applications, thus, may reuse the Broadcaster to
+        //support for other things. (voice, video, drawing...)
        broadcastReceiver = object: BroadcastReceiver() {
            override fun onReceive(context: Context?, intent: Intent?) {
-               //get deck, if deck != null then update the checkmark response
-               //this is called when adding a new Deck after hiding one for some reason. WHYYY
+
+               //Sent from the DeckRecyclerView for updating (longClickListener)
+               //Everything regarding editing/adding Decks is done at MainActivity. Used for centralisation
                if (intent?.action == DeckRecyclerAdapter.changeCompletedForDeck) {
                    val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
                    deck?.let { deck ->
@@ -101,6 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                }
            }
        }
+        //Register the LocalBroadcast Listener
         val filter = IntentFilter(DeckRecyclerAdapter.changeCompletedForDeck)
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter)
 
@@ -108,10 +118,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recycler = findViewById(R.id.main_activity_reclyer_view)
         adapter = DeckRecyclerAdapter(this)
 
-
         //start application is sorting alpha ascending mode
         globalViewModel.sortBy(Sort.ALPHA_ASC)
 
+        //Continually observe the changes made to the LiveData. Update the Recycler View depending on that
         globalViewModel.allDecks.observeForever { deck ->
             deck?.let { adapter.setDecks(deck) }
         }
@@ -133,9 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         contextMenuText.setOnClickListener { view ->
             openContextMenu(view)
         }
-
     }
-
 
     //sort By Context Menu
     override fun onCreateContextMenu(
@@ -148,7 +156,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.sort_by_deck, menu)
     }
 
-    //What happens when button is clicked. Link to globalViewModel.
+    ////////////////////////////////////////////////////
+    //IMPORTANT: Sorting context menu options. Will change the ViewModels sorting option.
+    ////////////////////////////////////////////////////
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sort_by_alpha_asc -> {
@@ -163,7 +173,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    //Dealing /w Adding decks
+    //Listener for the FAB and recycler view events.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -190,17 +200,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    //If the drawer is open, close the drawer, NOT the application.
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
-
-
     }
+
     //Destroy the BroadcastReceiver
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }
 
+    //Navigation Drawer options
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))

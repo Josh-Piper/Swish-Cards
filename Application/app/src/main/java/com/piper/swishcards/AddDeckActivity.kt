@@ -35,6 +35,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setContentView(R.layout.activity_add_deck)
 
         //Topbar navigational drawer declarations
+        // As stated -> Needs refactoring.
         drawer = findViewById(R.id.drawer)
         topBarNav = findViewById(R.id.topbar_nav)
         toolbar = findViewById(R.id.toolbar)
@@ -65,6 +66,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             startActivity(intent as Intent?)
         }
 
+        //Hide keyboard from user.
         fun hideKeyboardFromInputText() {
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(inputTitle.windowToken, 0)
@@ -169,7 +171,10 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
         }
 
-
+        //Delete button changes the title of the current Deck Sends this to MainActivity.
+        //Main activity will delete the object if it has that specified name
+        //This needs refactoring/a better way for deleting.
+        //For instance, a different reply.
         deleteBtn.setOnClickListener {
             if (deck != null) {
                 deck.title = "deleted_object"

@@ -89,7 +89,7 @@ class DeckRecyclerAdapter(context: Context) :
 
         fun bind(item: Deck) {
             title.text = item.title
-            date.text = Deck.getStringFromCalendar(item.date)
+            date.text = Deck.getStringFromCalendar(item.date) //Converts the Calender/Date to string
         }
 
     }

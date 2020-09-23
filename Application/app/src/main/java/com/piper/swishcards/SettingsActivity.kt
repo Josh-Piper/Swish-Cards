@@ -40,6 +40,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setSupportActionBar(toolbar)
 
         //Top Bar / Navigational Drawer logic
+        //As stated the topbar/navigation drawer is duplicated code. Needs refactoring
         topBarNav.bringToFront()
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
         drawer.addDrawerListener(toggle)

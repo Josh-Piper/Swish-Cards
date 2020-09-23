@@ -3,6 +3,9 @@ package com.piper.swishcards
 import androidx.room.TypeConverter
 import java.util.*
 
+/////////////////////////////////
+//  REQUIRED FOR THE DATABASE  //
+////////////////////////////////
 class DeckTypeConverters {
     @TypeConverter
     fun toUUI(uuid: String?): UUID? {

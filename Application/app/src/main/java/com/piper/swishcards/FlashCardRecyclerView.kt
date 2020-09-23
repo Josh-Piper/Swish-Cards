@@ -27,8 +27,6 @@ class FlashCardRecyclerView(context: Context): RecyclerView.Adapter<FlashCardRec
                 true
             }
         }
-        //set on LongClickListener for editing
-        //startActivity for blah blah
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashCardHolder {
@@ -45,15 +43,10 @@ class FlashCardRecyclerView(context: Context): RecyclerView.Adapter<FlashCardRec
         val checkbox: CheckBox = v.findViewById(R.id.card_checkbox)
         private val cardTitle: TextView = v.findViewById(R.id.card_title)
 
-
-
         fun bind(item: FlashCard) {
             val title = if (item.question.length > 10) item.question.substring(0, 10) + ".." else item.question
             checkbox.isChecked = item.completed
             cardTitle.setText(title)
         }
     }
-
-
-
 }
