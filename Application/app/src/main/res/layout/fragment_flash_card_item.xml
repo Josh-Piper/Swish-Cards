@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:id="@+id/linear_layout_base"
     android:orientation="horizontal"
+    android:baselineAligned="false"
     xmlns:tools="http://schemas.android.com/tools"
     android:weightSum="4"
     android:paddingVertical="@dimen/default_margin_size"
@@ -35,7 +36,8 @@
             android:layout_height="match_parent">
 
             <TableRow style="@style/gobal_checkbox_tablerow"
-                android:paddingEnd="@dimen/default_margin_size">
+                android:paddingEnd="@dimen/default_margin_size"
+                android:paddingStart="@dimen/zero">
 
                 <CheckBox
                     android:id="@+id/card_checkbox"

@@ -1,7 +1,5 @@
 package com.piper.swishcards
 
-import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -9,11 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.logging.Handler
 
 
 //ViewAdapter
@@ -35,10 +30,7 @@ class DeckRecyclerAdapter(context: Context) :
             //For reusable/switching of items, set the checkbox to the current completed status.
             checkBox.setOnClickListener(null)
 
-            bind(item) 
-
-
-            Log.i("wow", "onBindViewHolder -> ${item.title} is complete? ${item.completed} and checkbox is ${checkBox.isChecked}")
+            bind(item)
 
             //manages individual onClick (set here to allow prioritising different decks, i.e. dates)
             layout.setOnLongClickListener {view ->
@@ -98,7 +90,6 @@ class DeckRecyclerAdapter(context: Context) :
         fun bind(item: Deck) {
             title.text = item.title
             date.text = Deck.getStringFromCalendar(item.date)
-            Log.i("wow", "onBind -> ${item.title} is complete? ${item.completed} and checkbox is ${checkBox.isChecked}")
         }
 
     }

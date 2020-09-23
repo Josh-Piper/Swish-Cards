@@ -31,7 +31,7 @@
             android:orientation="vertical"
             android:layout_weight="10"
             android:weightSum="10"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp">
 
 
         <androidx.appcompat.widget.Toolbar
@@ -125,6 +125,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/placeholder"
                             android:background="@drawable/boxedittext"
+                            android:focusable="true"
                             android:textColor="@color/white"
                             android:textSize="@dimen/med_text_size" />
 
@@ -155,6 +156,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/placeholder"
                             android:background="@drawable/boxedittext"
+                            android:focusable="true"
                             android:textColor="@color/white"
                             android:textSize="@dimen/med_text_size" />
 

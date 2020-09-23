@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class GlobalViewModel(application: Application) : AndroidViewModel(application) {
@@ -14,7 +13,7 @@ class GlobalViewModel(application: Application) : AndroidViewModel(application) 
     val allDecks: LiveData<List<Deck>>
 
     init {
-        val decksDao = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO()
+        val decksDao = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO() //Get database interface
         repository = DeckRepository.get(decksDao)
         allDecks = repository.getAllDecks() //should this be observing
     }

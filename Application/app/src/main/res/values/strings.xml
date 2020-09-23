@@ -7,8 +7,6 @@
     <string name="back_button">BACK</string>
     <string name="settings_button">SETTINGS</string>
     <string name="decks_button">DECKS</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="due_date_hint">01-01-2021</string>
     <string name="sort_by_title">sort by:</string>
     <string name="sort_by_alpha_asc">Alphabetically Ascending</string>
@@ -29,7 +27,6 @@
     <string name="delete_all_decks">Delete All Decks</string>
     <string name="navigational_drawer_open">Open Navigational Drawer</string>
     <string name="navigational_drawer_close">Close Navigational Drawer</string>
-    <string name="flash_cards">Flash Cards</string>
     <string name="Decks">Swish Cards | Decks</string>
     <string name="nav_bar_general_title">General</string>
     <string name="Settings">Swish Cards | Settings</string>
@@ -40,4 +37,5 @@
     <string name="question_text">Question</string>
     <string name="type_of_question">Type of Question</string>
     <string name="answer">Answer</string>
+    <string name="flash_card_icon">Flash Card Icon in Navigation Drawer Header</string>
 </resources>

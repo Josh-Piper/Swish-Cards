@@ -1,6 +1,5 @@
 package com.piper.swishcards
 
-import android.content.res.Resources
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -17,10 +16,6 @@ data class Deck(
     @ColumnInfo(name = "date") var date: Calendar,
     @ColumnInfo(name = "completed") var completed: Boolean
 ) : Parcelable {
-
-
-
-
 
     companion object {
         //Used for editing Deck purposes
@@ -42,9 +37,7 @@ data class Deck(
         }
 
         fun getStringFromCalendar(calendar: Calendar): String {
-            val date = SimpleDateFormat("dd-MM-yyyy").format(calendar.time)
-            return date
+            return SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(calendar.time) //Added Locale.English
         }
-
     }
 }

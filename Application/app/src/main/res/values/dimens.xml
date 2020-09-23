@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="max_line">1</dimen>
     <dimen name="default_margin_size">16dp</dimen>
     <dimen name="fab_icon_size">50dp</dimen>
     <dimen name="med_margin_size">36dp</dimen>
     <dimen name="med_text_size">35sp</dimen>
-    <dimen name="nav_bar_height">60dp</dimen>
     <dimen name="small_text_size">20sp</dimen>
     <dimen name="large_margin_size">75dp</dimen>
-    <dimen name="one_dp">1dp</dimen>
     <dimen name="scale_card">2</dimen>
     <dimen name="small_mid_text_size">26sp</dimen>
+    <dimen name="zero">0dp</dimen>
     <item name="default_scale_checkbox" type="dimen" format="float">1.5</item>
 </resources>

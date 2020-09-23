@@ -1,7 +1,6 @@
 package com.piper.swishcards
 
 import androidx.room.TypeConverter
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DeckTypeConverters {
@@ -17,7 +16,7 @@ class DeckTypeConverters {
 
     @TypeConverter
     fun toCalender(time: Long): Calendar {
-        var c = Calendar.getInstance()
+        val c = Calendar.getInstance()
         c.timeInMillis = time
         return c
     }

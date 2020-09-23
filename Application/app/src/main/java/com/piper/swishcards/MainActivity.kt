@@ -7,15 +7,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.PrecomputedText
 import android.util.Log
 import android.view.ContextMenu
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
@@ -24,16 +20,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationMenu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
-import java.security.Policy
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    //Declare the UI widgets.
     private lateinit var globalViewModel: GlobalViewModel
     private lateinit var contextMenuText: TextView
     private lateinit var fab: FloatingActionButton
@@ -56,19 +51,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        //Logic
+        //Navigation drawer logic
+        //NEEDS REFACTORING -> COPIED AND PASTED THROUGHOUT THE APPLICATION
         topBarNav.bringToFront()
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
 
-
-        Log.i("wow", "I am the creator of all things and AM CALLED!")
-
         //Get current colour scenario
         val lightModeKey = getString(R.string.light_mode_pref_key)
-        val sharedPref = this?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         when (sharedPref.getBoolean(lightModeKey, false)) {
             false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -101,7 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                //get deck, if deck != null then update the checkmark response
                //this is called when adding a new Deck after hiding one for some reason. WHYYY
                if (intent?.action == DeckRecyclerAdapter.changeCompletedForDeck) {
-                   val deck = intent?.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
+                   val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
                    deck?.let { deck ->
                        globalViewModel.update(deck)
                    }
@@ -157,16 +150,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //What happens when button is clicked. Link to globalViewModel.
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.sort_by_alpha_asc -> {
-                globalViewModel.sortBy(Sort.ALPHA_ASC); contextMenuText.setText(R.string.sort_by_alpha_asc); return true; }
+                globalViewModel.sortBy(Sort.ALPHA_ASC); contextMenuText.setText(R.string.sort_by_alpha_asc); true; }
             R.id.sort_by_alpha_desc -> {
-                globalViewModel.sortBy(Sort.ALPHA_DES); contextMenuText.setText(R.string.sort_by_alpha_des); return true; }
+                globalViewModel.sortBy(Sort.ALPHA_DES); contextMenuText.setText(R.string.sort_by_alpha_des); true; }
             R.id.sort_by_completed_hidden -> {
-                globalViewModel.sortBy(Sort.NON_COM); contextMenuText.setText(R.string.sort_by_non_complete); return true; }
+                globalViewModel.sortBy(Sort.NON_COM); contextMenuText.setText(R.string.sort_by_non_complete); true; }
             R.id.sort_by_due_date -> {
                 globalViewModel.sortBy(Sort.DUE_DATE); contextMenuText.setText(R.string.sort_by_due_date); return true; }
-            else -> return super.onContextItemSelected(item)
+            else -> super.onContextItemSelected(item)
         }
     }
 
@@ -192,7 +185,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 //Update deck
                 deck?.let {
                     globalViewModel.update(deck)
-                    Log.i("hello", "${deck.date}")
                 }
             }
         }
@@ -205,13 +197,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     //Destroy the BroadcastReceiver
     override fun onDestroy() {
-        Log.i("wow", "I am called (THE DESTROYER)")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Log.i("wow", "onNaviItemSelected")
         when (item.itemId) {
             R.id.drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))
             else -> null //do nothing

@@ -14,15 +14,15 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     val allCards: LiveData<List<FlashCard>>
 
     init {
-        val deckDAO = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO()
-        repository = CardRepository.get(deckDAO)
+        val cardDao = FlashCardDB.getDatabase(application, viewModelScope).CardDAO() //gets Database interface
+        repository = CardRepository.get(cardDao)
         allCards = repository.getAllCards()
     }
 
-    fun sortCards(sortingMethod: SortCard, parentID: UUID) = viewModelScope.launch(Dispatchers.IO) {
+    fun sortCards(sortingMethod: SortCard, parentID: UUID) = viewModelScope.launch(Dispatchers.Main) {
         when (sortingMethod) {
             SortCard.ALL -> repository.sortCardBy(SortCard.ALL, UUID.randomUUID())
-            SortCard.PARENT_ID ->repository.sortCardBy(SortCard.PARENT_ID, parentID)
+            SortCard.PARENT_ID -> repository.sortCardBy(SortCard.PARENT_ID, parentID)
         }
     }
 

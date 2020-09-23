@@ -16,5 +16,4 @@ data class FlashCard(
     @ColumnInfo(name = "answer") var answer: String,
     @ColumnInfo(name = "type") var type: CardType,
     @ColumnInfo(name = "completed") var completed: Boolean)
-    : Parcelable {
-}
+    : Parcelable

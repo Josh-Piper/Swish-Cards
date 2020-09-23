@@ -5,11 +5,9 @@
     <color name="colorAccent">#006795</color>
     <color name="white">#ffffff</color>
     <color name="lightGrayCorneredBox">#4D4D4D</color>
-    <color name="hintTextColor">#F1F1F1</color>
     <color name="background_color">#FBFBFB</color>
     <color name="nav_bottom_background_colour">#006795</color>
     <color name="main_text_color">#000000</color>
-    <color name="subtitle_text_color">#333232</color>
     <color name="add_button_color">#168BBF</color>
     <color name="border_navi">#707070</color>
     <color name="delete_color">#FFA1A1</color>

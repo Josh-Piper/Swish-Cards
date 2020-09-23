@@ -8,7 +8,6 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 
 class FlashCardRecyclerView(context: Context): RecyclerView.Adapter<FlashCardRecyclerView.FlashCardHolder>() {
 
@@ -33,7 +32,7 @@ class FlashCardRecyclerView(context: Context): RecyclerView.Adapter<FlashCardRec
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlashCardHolder {
-        val view = inflater.inflate(R.layout.fragment_deck_item, parent, false)
+        val view = inflater.inflate(R.layout.fragment_flash_card_item, parent, false)
         return FlashCardHolder(view)
     }
 

@@ -3,7 +3,6 @@ package com.piper.swishcards
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import java.util.*
 
 class DeckRepository(private val deckDao: DeckDAO) {
 
@@ -23,12 +22,12 @@ class DeckRepository(private val deckDao: DeckDAO) {
         }
     }
 
-    suspend fun deleteAllCompletedDecks() {
+    fun deleteAllCompletedDecks() {
         deckDao.deleteAllCompletedDecks()
     }
 
     //Changes datasource of livedata
-    suspend fun sortBy(sortingMethod: Sort) {
+    fun sortBy(sortingMethod: Sort) {
 
         when (sortingMethod) {
             Sort.ALPHA_ASC -> loadLiveData(deckDao.getDecksSortedByAlphaAsc())

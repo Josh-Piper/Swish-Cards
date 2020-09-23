@@ -33,8 +33,7 @@ class ComposeComparison : AppCompatActivity() {
     }
 }
 
-data class Question(val question: String, val answer: String) {
-}
+data class Question(val question: String, val answer: String)
 
 enum class State {
     Question,

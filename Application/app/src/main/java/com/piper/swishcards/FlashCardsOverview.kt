@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import java.util.*
 
 class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawer: DrawerLayout
@@ -41,20 +42,6 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         //declare ViewModel
         cardsViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
 
-        //get passed value
-        val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
-
-        if (deck != null) {
-            //set the top bar message
-            val message = String.format(getString(R.string.top_bar_title_message), deck.title)
-            topBarTitle.setText(message)
-
-            //print all FlashCards existing to the recycler view
-            //if nothing passed then do nothing. This shouldnt work otherwies. Prompt error
-        } else {
-            finish()
-            Log.i("wow", "Error occurred")
-        }
 
         //Set RecyclerView.
         adapters = FlashCardRecyclerView(this)
@@ -65,6 +52,26 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         //dynamic observation
+        val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
+
+        if (deck != null) {
+            //set the top bar message
+            val message = String.format(getString(R.string.top_bar_title_message), deck.title)
+            topBarTitle.setText(message)
+
+            //Sorting Cards only by parent ID
+            cardsViewModel.sortCards(SortCard.PARENT_ID, deck.id)
+
+
+            Log.i("wow", "Deck ID: ${deck.id}")
+            //print all FlashCards existing to the recycler view
+            //if nothing passed then do nothing. This shouldnt work otherwies. Prompt error
+        } else {
+            finish()
+            Log.i("wow", "Error occurred")
+        }
+
+
         cardsViewModel.allCards.observeForever { cards ->
             deck?.let { adapters.setCards(cards) }
         }
@@ -77,8 +84,6 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             startActivityForResult(intent, createNewCardFromAddCardRequestCode)
         }
-
-        //use call back function
 
         
 
@@ -117,7 +122,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         if (requestCode == createNewCardFromAddCardRequestCode && resultCode == RESULT_OK) {
             data?.extras?.getParcelable<FlashCard>(AddCardActivity.addCardReply)?.let { card ->
                 cardsViewModel.insertCard(card)
-                //Add card to the deck
+                Log.i("wow", "Card Owner: ${card.pid}")
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.piper.swishcards
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -79,10 +77,8 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             } //delete all decks from Repository and Toast to show completition
             .setNegativeButton("No") { _, _ -> resetAction() }
 
-        Log.i("wow", "global Light mode: ${settingsViewModel.darkMode}")
-
         //Cache the value from SettingsViewModel according to the current colour sceme
-        val sharedPref = this?.getSharedPreferences(
+        val sharedPref = this.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
 
@@ -119,7 +115,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             proceedWithRequest = SETTINGS.DELETE_ALL; builder.show() }
 
         lightMode.setOnCheckedChangeListener { compoundButton, isChecked ->
-            sharedPref.edit().putBoolean(lightModeKey, isChecked).commit()
+            sharedPref.edit().putBoolean(lightModeKey, isChecked).apply()
             settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
             updateColourScheme()
         }

@@ -4,15 +4,10 @@
     android:layout_height="200dp"
     android:background="@drawable/gradient_nav_drawer"
     android:gravity="bottom|end"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+    android:orientation="horizontal">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:fontFamily="@font/amita_bold"
@@ -23,11 +18,11 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/large_margin_size"
+        android:contentDescription="@string/flash_card_icon"
         android:scaleY="@dimen/scale_card"
         android:layout_marginEnd="@dimen/default_margin_size"
         android:scaleX="@dimen/scale_card"
         android:src="@drawable/ic_white_cards_icon"/>
 
-    </LinearLayout>
 </LinearLayout>

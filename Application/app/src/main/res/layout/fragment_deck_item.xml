@@ -13,7 +13,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_weight="8"
         android:orientation="vertical"
         android:gravity="center_vertical"
@@ -38,7 +38,8 @@
     </LinearLayout>
 
     <TableRow style="@style/gobal_checkbox_tablerow"
-        android:paddingEnd="@dimen/default_margin_size">
+        android:paddingEnd="@dimen/default_margin_size"
+        android:paddingStart="@dimen/zero">
 
         <CheckBox
             android:id="@+id/fragment_deck_item_selected"

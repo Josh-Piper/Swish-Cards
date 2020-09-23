@@ -6,18 +6,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -85,13 +81,13 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
 
             override fun afterTextChanged(currentText: Editable?) {
-                val current: String = currentText.toString() ?: ""
+                val current: String = currentText.toString()
                 val currentBadWords = current.findAnyOf(
                     bad_words,
                     0,
                     ignoreCase = true
                 ) //check if current has any bad words in it
-                if (current.length ?: 0 > 10) {
+                if (current.length > 10) {
                     inputTitle.setText(currentText?.substring(0, 10)) //inputTitle.setSelection(10)
                     hideKeyboardFromInputText()
                     Snackbar.make(
@@ -143,16 +139,15 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         doneBtn.setOnClickListener { view ->
             val replyIntent = Intent()
-            var title: String = inputTitle.text.toString()
-            var due: String = inputDate.text.toString()
+            val title: String = inputTitle.text.toString()
+            val due: String = inputDate.text.toString()
 
-            if  (!(title.isNullOrEmpty()) && !(due.isNullOrEmpty())) {
+            if  (!(title.isEmpty()) && !(due.isEmpty())) {
 
                 //if Deck was parsed from Recycler Item
                 if (deck != null) {
                     deck.title = title
                     deck.date = Deck.getCalendarFromAU(due)
-                    Log.i("hello", "${deck.date}")
                 }
 
                 val addDeck = Deck(
