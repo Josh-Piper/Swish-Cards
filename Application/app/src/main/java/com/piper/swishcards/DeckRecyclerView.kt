@@ -24,7 +24,6 @@ class DeckRecyclerAdapter(context: Context) :
     override fun onBindViewHolder(holder: DeckViewHolder, position: Int) {
         val item = decks[position]
 
-
         holder.apply {
 
             //For reusable/switching of items, set the checkbox to the current completed status.
@@ -75,10 +74,6 @@ class DeckRecyclerAdapter(context: Context) :
         this.decks = deck
         notifyDataSetChanged()
     }
-
-
-
-
 
     //ViewHolder
     class DeckViewHolder(v: View) : RecyclerView.ViewHolder(v) {

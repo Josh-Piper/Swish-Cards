@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,6 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
     private lateinit var inputDate: EditText
-    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -55,16 +55,12 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
 
         //Bottom navigational bar handling
-        bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemReselectedListener {
-            val intent = when (it.itemId) {
-                R.id.nav_decks -> {} //do nothing as current setting is MainActivity
-                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
-                R.id.nav_back -> { finish() }
-                else -> {}
-            }
-            startActivity(intent as Intent?)
+        val firstFragment = BottomBarFragment().apply {
+            setScreen(SCREEN.AddDeck)
         }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_bottom_bar, firstFragment)
+            .commit()
 
         //Hide keyboard from user.
         fun hideKeyboardFromInputText() {

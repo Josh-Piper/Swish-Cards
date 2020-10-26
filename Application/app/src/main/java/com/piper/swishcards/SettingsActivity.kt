@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
@@ -22,11 +22,11 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var deleteCompletedDecks: CheckBox
     private lateinit var deleteAllDecks: CheckBox
     private lateinit var lightMode: CheckBox
-    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var bottomBar: LinearLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +46,16 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
+
+
+        bottomBar = findViewById(R.id.fragment_container_bottom_bar)
+        //Inflate bottom navigational view
+        val firstFragment = BottomBarFragment().apply {
+            setScreen(SCREEN.SettingsPage)
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_bottom_bar, firstFragment)
+            .commit()
 
 
         deleteCompletedDecks = findViewById(R.id.delete_complete_decks)
@@ -85,29 +95,6 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
         lightMode.isChecked = settingsViewModel.darkMode
-
-        bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemSelectedListener {
-            val intent = when (it.itemId) {
-                R.id.nav_settings -> {
-                    null;
-                    val s = Snackbar.make(
-                        bottomNavigation,
-                        "Currently on the Settings Screen!",
-                        Snackbar.LENGTH_SHORT
-                    ); s.setAction("Dismiss") { s.dismiss() }; s.show()
-                }
-                else -> {
-                    onBackPressed(); overridePendingTransition(R.anim.fadein, R.anim.fadeout); }
-            }
-            try {
-                startActivity(intent as Intent?)
-            } catch (e: Exception) {
-                Log.i("Exception", "Exception: $e occurred")
-            }
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout)
-            true
-        }
 
         deleteCompletedDecks.setOnClickListener { _ ->
             proceedWithRequest = SETTINGS.DELETE_COMPLETED; builder.show() }

@@ -11,16 +11,17 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +35,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var fab: FloatingActionButton
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: DeckRecyclerAdapter
-    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var broadcastReceiver: BroadcastReceiver
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
@@ -59,6 +59,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
 
+        //Inflate bottom navigational view
+        val firstFragment = BottomBarFragment().apply {
+            setScreen(SCREEN.MainPage)
+        }
+        supportFragmentManager.beginTransaction()
+        .add(R.id.fragment_container_bottom_bar, firstFragment)
+        .commit()
+
         ////////////////////
         //Get current colour scenario
         //This is redundant/copied code from the Settings Activity.
@@ -74,18 +82,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //basic declarations. UI + ViewModels + RecyclerViews(adapter)
         globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)
         fab = findViewById(R.id.main_activity_fab)
-
-        //Bottom navbar implementation
-        bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemSelectedListener { navButton ->
-            val intent = when (navButton.itemId) {
-                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
-                else -> { null; val s = Snackbar.make(bottomNavigation, "Currently on the Main Screen!", Snackbar.LENGTH_SHORT); s.setAction("Dismiss") { s.dismiss() }; s.show()}  //do nothing as current setting is MainActivity
-            }
-            try { startActivity(intent as Intent?) } catch (e: Exception) { Log.i("Exception", "Exception: $e occurred") }
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout)
-            true
-        }
 
         //Context Menu
         //Registers the sorting menu.

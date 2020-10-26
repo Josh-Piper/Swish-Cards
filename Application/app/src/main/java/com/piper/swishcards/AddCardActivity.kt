@@ -23,7 +23,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var bottomBar: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,19 +65,11 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         //Bottom navbar implementation
         //Also copied and pasted code. Needs to be refactored to reduce the copied and pasted code amounst the application.
-        bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemSelectedListener { navButton ->
-            val intent = when (navButton.itemId) {
-                //Add Flag will close everything on the Stack to only have MainActivity -> and the selected activity.
-                R.id.nav_settings -> Intent(this, SettingsActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
-                R.id.nav_decks -> Intent(this, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
-                R.id.nav_back -> null
-                else -> null //do nothing as current setting is MainActivity
-            }
-            if (intent == null) finish() else startActivity(intent)
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout) //Transition for the finish.
-            true
-        }
+        //Inflate bottom navigational view
+        val firstFragment = BottomBarFragment()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_bottom_bar, firstFragment)
+            .commit()
 
         doneButton.setOnClickListener { view ->
 

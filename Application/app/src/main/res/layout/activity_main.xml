@@ -116,18 +116,12 @@
 
             </LinearLayout>
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:layout_width="match_parent"
-                android:id="@+id/bottom_navigation_view"
-                app:menu="@menu/bottom_nav_bar"
-                android:background="@color/nav_bottom_background_colour"
-                app:itemTextColor="@color/white"
-                app:itemIconTint="@color/white"
+            <LinearLayout
+                android:id="@+id/fragment_container_bottom_bar"
+                android:orientation="vertical"
                 android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"/>
-
-           <!-- <include layout="@layout/fragment_navigation" android:id="@+id/fragment_navigation"/>-->
-            
         </LinearLayout>
 
 

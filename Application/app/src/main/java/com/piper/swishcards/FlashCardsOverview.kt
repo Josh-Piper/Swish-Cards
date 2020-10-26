@@ -20,7 +20,6 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var recycler: RecyclerView
     private lateinit var cardsViewModel: CardViewModel
     private lateinit var fab: FloatingActionButton
@@ -63,7 +62,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
             cardsViewModel.sortCards(SortCard.PARENT_ID, deck.id)
 
 
-            Log.i("wow", "Deck ID: ${deck.id}")
+            Log.i("wow", "In Card overview Deck ID: ${deck.id}")
             //print all FlashCards existing to the recycler view
             //if nothing passed then do nothing. This shouldnt work otherwies. Prompt error
         } else {
@@ -71,7 +70,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
             Log.i("wow", "Error occurred")
         }
 
-
+        //this isnt working? not updating the heirarchy when theres something new
         cardsViewModel.allCards.observeForever { cards ->
             deck?.let { adapters.setCards(cards) }
         }
@@ -94,17 +93,13 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
 
-        //Bottom navigational bar handling
-        bottomNavigation = findViewById(R.id.bottom_navigation_view)
-        bottomNavigation.setOnNavigationItemSelectedListener {navBtn ->
-            val intent = when (navBtn.itemId) {
-                R.id.nav_settings -> Intent(this.baseContext, SettingsActivity::class.java)
-                else -> null
-            }
-            if (intent != null) startActivity(intent)
-            finish()
-            true
+        //Inflate bottom navigational view
+        val firstFragment = BottomBarFragment().apply {
+            setScreen(SCREEN.CardPage)
         }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_bottom_bar, firstFragment)
+            .commit()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
