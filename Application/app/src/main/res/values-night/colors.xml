@@ -17,4 +17,6 @@
     <color name="checkbox_color">#ffffff</color>
     <color name="black">#000000</color>
     <color name="contrast_background">#424242</color>
+    <color name="background_color_contrast">#E9424242</color>
+    <color name="hint_colour">#B4B4B4</color>
 </resources>

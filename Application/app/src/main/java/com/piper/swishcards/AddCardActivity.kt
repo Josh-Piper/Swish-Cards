@@ -23,7 +23,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
-    private lateinit var bottomBar: LinearLayout
+    private lateinit var firstFragment: BottomBarFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,9 +64,10 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         cardType.adapter = adapter
 
         //Bottom navbar implementation
-        //Also copied and pasted code. Needs to be refactored to reduce the copied and pasted code amounst the application.
         //Inflate bottom navigational view
-        val firstFragment = BottomBarFragment()
+        firstFragment = BottomBarFragment.get().apply {
+            setScreen(SCREEN.CardPage)
+        }
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container_bottom_bar, firstFragment)
             .commit()
@@ -108,6 +109,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     type = CardType.SHORT_ANSWER,
                     completed = false
                 )
+                Log.i("wow", "Card PID: ${card.pid}")
                 val intent = Intent().putExtra(addCardReply, card)
                 setResult(RESULT_OK, intent)
                 finish()
@@ -123,6 +125,11 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         startActivity(intent)
         return true
+    }
+
+    override fun onBackPressed() {
+        firstFragment.closeScreen()
+        super.onBackPressed()
     }
 
     companion object {

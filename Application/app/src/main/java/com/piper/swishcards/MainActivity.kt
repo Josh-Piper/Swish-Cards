@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var firstFragment: BottomBarFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +61,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         topBarNav.setNavigationItemSelectedListener(this)
 
         //Inflate bottom navigational view
-        val firstFragment = BottomBarFragment().apply {
+        firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.MainPage)
         }
+
         supportFragmentManager.beginTransaction()
         .add(R.id.fragment_container_bottom_bar, firstFragment)
         .commit()
@@ -139,6 +141,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         contextMenuText.setOnClickListener { view ->
             openContextMenu(view)
         }
+
+
+
+        firstFragment.showCurrent()
     }
 
     //sort By Context Menu
@@ -198,11 +204,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //If the drawer is open, close the drawer, NOT the application.
     override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
+        if (drawer.isDrawerOpen(GravityCompat.START)) { drawer.closeDrawer(GravityCompat.START) } else {
+            firstFragment.closeScreen()
+            super.onBackPressed()
+        }
     }
 
     //Destroy the BroadcastReceiver
     override fun onDestroy() {
+        Log.i("crazy", "MainActivity onDestroy() called")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }

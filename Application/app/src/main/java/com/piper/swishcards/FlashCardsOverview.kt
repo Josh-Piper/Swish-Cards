@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 
-class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AddCardCallback {
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -25,6 +25,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var fab: FloatingActionButton
     private lateinit var topBarTitle: TextView
     private lateinit var adapters: FlashCardRecyclerView
+    private lateinit var firstFragment: BottomBarFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
 
         //Set RecyclerView.
-        adapters = FlashCardRecyclerView(this)
+        adapters = FlashCardRecyclerView(this, this)
         recycler = findViewById(R.id.recycler)
         recycler.apply {
             layoutManager = LinearLayoutManager(this@FlashCardsOverview)
@@ -60,7 +61,9 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             //Sorting Cards only by parent ID
             cardsViewModel.sortCards(SortCard.PARENT_ID, deck.id)
+            Log.i("wow", "sort card by parent called")
 
+            Log.i("wow", "Deck ID = ${deck.id}")
 
             Log.i("wow", "In Card overview Deck ID: ${deck.id}")
             //print all FlashCards existing to the recycler view
@@ -72,6 +75,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         //this isnt working? not updating the heirarchy when theres something new
         cardsViewModel.allCards.observeForever { cards ->
+            Log.i("wow", "ObserveForever called")
             deck?.let { adapters.setCards(cards) }
         }
 
@@ -94,7 +98,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         topBarNav.setNavigationItemSelectedListener(this)
 
         //Inflate bottom navigational view
-        val firstFragment = BottomBarFragment().apply {
+        firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.CardPage)
         }
         supportFragmentManager.beginTransaction()
@@ -119,7 +123,22 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
                 cardsViewModel.insertCard(card)
                 Log.i("wow", "Card Owner: ${card.pid}")
             }
+        } else if (requestCode == FlashCardRecyclerView.AddCardkActivityStartForResult && resultCode == RESULT_OK) {
+            //update or delete card depending on action
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.addCardReply)?.let { card ->
+                if (card.question == "deleteCard") cardsViewModel.deleteCard(card) else cardsViewModel.updateCard(card)
+            }
         }
+    }
+
+    override fun onUpdateCard(card: FlashCard) {
+        //only used to update card boolean value of completed.
+        //cardsViewModel.updateCard(card)
+    }
+
+    override fun onBackPressed() {
+        firstFragment.closeScreen()
+        super.onBackPressed()
     }
 
     companion object {

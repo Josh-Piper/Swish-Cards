@@ -121,6 +121,7 @@
                             android:layout_marginHorizontal="@dimen/med_margin_size"
                             android:gravity="center|center_vertical"
                             android:layout_height="wrap_content"
+                            android:textColorHint="@color/hint_colour"
                             android:hint="@string/placeholder"
                             android:background="@drawable/boxedittext"
                             android:textColor="@color/main_text_color"
@@ -153,6 +154,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="text"
                             android:hint="@string/placeholder"
+                            android:textColorHint="@color/hint_colour"
                             android:background="@drawable/boxedittext"
                             android:textColor="@color/main_text_color"
                             android:textSize="@dimen/med_text_size" />

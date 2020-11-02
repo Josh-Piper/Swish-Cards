@@ -58,7 +58,7 @@
             android:layout_marginHorizontal="30dp"
             android:layout_weight="8"
             android:weightSum="10"
-            android:background="@color/contrast_background"
+            android:background="@drawable/add_page"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -88,6 +88,7 @@
                     android:layout_marginHorizontal="@dimen/med_margin_size"
                     android:gravity="center|center_vertical"
                     android:layout_height="wrap_content"
+                    android:textColorHint="@color/hint_colour"
                     android:hint="@string/placeholder"
                     android:background="@drawable/boxedittext"
                     android:textColor="@color/white"
@@ -110,6 +111,7 @@
                     android:layout_marginHorizontal="@dimen/med_margin_size"
                     android:gravity="center|center_vertical"
                     android:layout_height="wrap_content"
+                    android:textColorHint="@color/hint_colour"
                     android:focusable="false"
                     android:hint="@string/due_date_hint"
                     android:background="@drawable/boxedittext"

@@ -97,10 +97,14 @@
                         android:id="@+id/context_menu_sort_by_text"
                         android:layout_height="wrap_content"
                         android:text="@string/sort_by_alpha_asc"
+                        android:padding="@dimen/tiny_padding"
                         android:textColor="@color/border_navi"
+                        android:background="@drawable/sort_box"
                         android:textSize="@dimen/small_text_size"/>
 
+
                 </LinearLayout>
+
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/main_activity_fab"

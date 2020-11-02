@@ -28,6 +28,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var inputDate: EditText
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
+    private lateinit var firstFragment: BottomBarFragment
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +56,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
 
         //Bottom navigational bar handling
-        val firstFragment = BottomBarFragment().apply {
+        firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.AddDeck)
         }
         supportFragmentManager.beginTransaction()
@@ -188,6 +189,11 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             else -> null //do nothing
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        firstFragment.closeScreen()
+        super.onBackPressed()
     }
 
     companion object {

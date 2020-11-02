@@ -27,6 +27,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var bottomBar: LinearLayout
+    private lateinit var firstFragment: BottomBarFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         bottomBar = findViewById(R.id.fragment_container_bottom_bar)
         //Inflate bottom navigational view
-        val firstFragment = BottomBarFragment().apply {
+        firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.SettingsPage)
         }
         supportFragmentManager.beginTransaction()
@@ -107,6 +108,8 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
             updateColourScheme()
         }
+
+       firstFragment.showCurrent()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -115,5 +118,10 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             else -> null //do nothing
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        firstFragment.closeScreen()
+        super.onBackPressed()
     }
 }
