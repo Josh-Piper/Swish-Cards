@@ -39,7 +39,7 @@ class CardRepository(private val cardDAO: CardDAO) {
 
     //updateCard()
     suspend fun updateCard(card: FlashCard) {
-        cardDAO.deleteCard(card)
+        cardDAO.updateCard(card)
     }
 
     //deleteAllCardsFromParent()
@@ -48,8 +48,8 @@ class CardRepository(private val cardDAO: CardDAO) {
     }
 
     //cardDeleteAll()
-    suspend fun cardDeleteAll() {
-        cardDAO.cardDeleteAll()
+    suspend fun deleteAllCards() {
+        cardDAO.deleteAllCards()
     }
     companion object {
         private var cardRepo: CardRepository? = null

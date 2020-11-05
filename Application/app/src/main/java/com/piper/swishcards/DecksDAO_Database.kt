@@ -58,7 +58,7 @@ interface DeckDAO {
 interface CardDAO {
 
     @Query("DELETE FROM card_table")
-    suspend fun cardDeleteAll()
+    suspend fun deleteAllCards()
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCard(card: FlashCard)

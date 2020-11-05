@@ -37,6 +37,10 @@ class DeckRepository(private val deckDao: DeckDAO) {
         }
     }
 
+    fun getCompletedDecks(): List<Deck>? {
+        return deckDao.getDecksSortedByNonCompleted().value
+    }
+
     suspend fun insert(deck: Deck) {
         deckDao.insert(deck)
     }

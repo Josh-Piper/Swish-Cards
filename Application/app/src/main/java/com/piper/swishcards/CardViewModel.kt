@@ -43,7 +43,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun cardDeleteAll() = viewModelScope.launch (Dispatchers.IO) {
-        repository.cardDeleteAll()
+        repository.deleteAllCards()
     }
 
 

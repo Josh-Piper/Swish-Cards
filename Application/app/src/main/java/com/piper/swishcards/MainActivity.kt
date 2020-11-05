@@ -71,15 +71,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         ////////////////////
         //Get current colour scenario
-        //This is redundant/copied code from the Settings Activity.
-        //Needs refactoring
-        ///////////////////////
         val lightModeKey = getString(R.string.light_mode_pref_key)
         val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        when (sharedPref.getBoolean(lightModeKey, false)) {
-            false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
+        //Set colour scheme to match SettingsActivity
+        SettingsActivity.updateColourScheme(sharedPref.getBoolean(lightModeKey, false))
 
         //basic declarations. UI + ViewModels + RecyclerViews(adapter)
         globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)

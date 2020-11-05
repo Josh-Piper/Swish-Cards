@@ -119,21 +119,21 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == createNewCardFromAddCardRequestCode && resultCode == RESULT_OK) {
-            data?.extras?.getParcelable<FlashCard>(AddCardActivity.addCardReply)?.let { card ->
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)?.let { card ->
                 cardsViewModel.insertCard(card)
                 Log.i("wow", "Card Owner: ${card.pid}")
             }
         } else if (requestCode == FlashCardRecyclerView.AddCardkActivityStartForResult && resultCode == RESULT_OK) {
             //update or delete card depending on action
-            data?.extras?.getParcelable<FlashCard>(AddCardActivity.addCardReply)?.let { card ->
-                if (card.question == "deleteCard") cardsViewModel.deleteCard(card) else cardsViewModel.updateCard(card)
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)?.let { card ->
+                if (card.question == "deleted_object") cardsViewModel.deleteCard(card) else cardsViewModel.updateCard(card)
             }
         }
     }
 
     override fun onUpdateCard(card: FlashCard) {
         //only used to update card boolean value of completed.
-        //cardsViewModel.updateCard(card)
+        cardsViewModel.updateCard(card)
     }
 
     override fun onBackPressed() {

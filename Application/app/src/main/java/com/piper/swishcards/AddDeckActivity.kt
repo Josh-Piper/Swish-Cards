@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -8,10 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,7 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 
-class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ValidateCallback {
     private lateinit var doneBtn: Button
     private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
@@ -30,6 +28,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var topBarNav: NavigationView
     private lateinit var firstFragment: BottomBarFragment
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var toastContext: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +53,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         deleteBtn = findViewById(R.id.activity_add_deck_delete_button)
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
+        toastContext = findViewById(R.id.content)
 
         //Bottom navigational bar handling
         firstFragment = BottomBarFragment.get().apply {
@@ -63,53 +63,18 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             .add(R.id.fragment_container_bottom_bar, firstFragment)
             .commit()
 
-        //Hide keyboard from user.
-        fun hideKeyboardFromInputText() {
-            val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(inputTitle.windowToken, 0)
+
+        //TextWatcher declaration. Don't allow swear words or words > 10
+        val bad_words: MutableList<String> = mutableListOf()
+        resources.openRawResource(R.raw.swear_words).bufferedReader().forEachLine { line ->
+            bad_words.add(line)
         }
 
-        //TextWatcher would not work from another class. Current workaround is setting via. the Widgets
-        inputTitle.addTextChangedListener(object : TextWatcher {
-            val bad_words: MutableList<String> = mutableListOf()
+        val watcher = validatingWatcher(this).apply {
+            setWords(bad_words)
+        }
 
-            init { //Resources gathered from www.bannedwordlist.com
-                resources.openRawResource(R.raw.swear_words).bufferedReader().forEachLine { line ->
-                    bad_words.add(line)
-                }
-            }
-
-            override fun afterTextChanged(currentText: Editable?) {
-                val current: String = currentText.toString()
-                val currentBadWords = current.findAnyOf(
-                    bad_words,
-                    0,
-                    ignoreCase = true
-                ) //check if current has any bad words in it
-                if (current.length > 10) {
-                    inputTitle.setText(currentText?.substring(0, 10)) //inputTitle.setSelection(10)
-                    hideKeyboardFromInputText()
-                    Snackbar.make(
-                        findViewById(R.id.content),
-                        "Title cannot exceed 10 Characters",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-                if (currentBadWords != null) {
-                    val newText = current.replace(currentBadWords.second, "", true)
-                    inputTitle.setText(newText)
-                    hideKeyboardFromInputText()
-                    Snackbar.make(
-                        findViewById(R.id.content),
-                        "Innapropriate Content is Not Allowed!",
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        })
+        inputTitle.addTextChangedListener(watcher)
 
         //if activity started from recycler item, then collect the Deck object
         val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
@@ -189,6 +154,21 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             else -> null //do nothing
         }
         return true
+    }
+
+    //Hide keyboard from user.
+    fun hideKeyboardFromInputText() {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(inputTitle.windowToken, 0)
+    }
+
+    override fun setText(message: String) {
+        inputTitle.setText(message)
+    }
+
+    override fun showToast(message: String) {
+        Toast.makeText(toastContext.context, message, Toast.LENGTH_SHORT).show()
+        hideKeyboardFromInputText()
     }
 
     override fun onBackPressed() {

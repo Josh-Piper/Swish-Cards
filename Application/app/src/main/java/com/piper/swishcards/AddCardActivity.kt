@@ -29,12 +29,6 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_card)
 
-        //Get Deck from FlashCardsOverview. If no Deck was passed through. Then finish().
-        //This AddCardActivity requires the parentID. Thus, it should not operate unless the parent Deck is passed.
-        val deck = intent.extras?.getParcelable<Deck>(FlashCardsOverview.passDeckToCreateNewCard)
-
-        if (deck == null) { finish(); Log.i("wow", "error occurred getting Deck at AddCardActivity")} //if no Deck passed through, prompt error.
-
         //Attaching the UI aspects to their findViewById.
         deleteBtn = findViewById(R.id.activity_add_card_delete_button)
         doneButton = findViewById(R.id.activity_add_card_done_button)
@@ -72,8 +66,38 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             .add(R.id.fragment_container_bottom_bar, firstFragment)
             .commit()
 
+
+        //Get Deck from FlashCardsOverview. If no Deck was passed through. Then finish().
+        //This AddCardActivity requires the parentID. Thus, it should not operate unless the parent Deck is passed.
+        val deck = intent.extras?.getParcelable<Deck>(FlashCardsOverview.passDeckToCreateNewCard)
+
+        //Get FlashCard from recycler view from a long on Click
+        val card = intent.extras?.getParcelable<FlashCard>(FlashCardRecyclerView.CardPassedItemKey)
+
+        if (card != null) {
+            cardType.setSelection(adapter.getPosition(card.type))
+            cardQuestion.setText(card.question)
+            cardAnswer.setText(card.answer)
+        } else if (deck == null) {
+            finish() //An error occurred. (Log, if need be)
+        }
+
+
+
+        //Delete if a pre-existing card was selected.
+        deleteBtn.setOnClickListener { _ ->
+            if (card != null) {
+                card.question = "deleted_object"
+                val intent = Intent().apply { putExtra(ADD_CARD_REPLY, card) }
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+        }
+
+
         doneButton.setOnClickListener { view ->
 
+          /*  //validation
             //check the spinner option. Only Short_Answer currently supported. Snackbar... (an action to automatically change it to make it easier for a user.)
             if (!cardType.selectedItem.equals(CardType.SHORT_ANSWER)) {
                 val snack = Snackbar.make (view, "Short Answer is currently ONLY Supported", Snackbar.LENGTH_SHORT)
@@ -84,6 +108,10 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 return@setOnClickListener
             }
 
+
+            //validation
+            //validation should be moved to a text watcher
+            //or external class
             if (cardQuestion.text.length > 15 || cardAnswer.text.length > 15) {
                 val snack = Snackbar.make (view, "Short Answer is currently ONLY Supported", Snackbar.LENGTH_SHORT)
                 snack.setAction("SET") { view ->
@@ -97,23 +125,24 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             if (cardQuestion.text.isNullOrEmpty() || cardAnswer.text.isNullOrEmpty()) {
                 Snackbar.make (view, "Question and Answer must NOT be empty!", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }
-
-            //Send Deck to FlashCardOverview
-            deck?.apply {
-                val parentID = deck.id
-                val card = FlashCard(
-                    pid = parentID,
+            }*/
+                card?.apply {
+                    question = cardQuestion.text.toString()
+                    answer = cardAnswer.text.toString()
+                }
+           //if no pre-existing card passed through. Assign newCard to a FlashCard()
+                val newCard = if (deck != null) {
+                    FlashCard(
+                    pid = deck.id,
                     question = cardQuestion.text.toString(),
                     answer = cardAnswer.text.toString(),
                     type = CardType.SHORT_ANSWER,
                     completed = false
-                )
-                Log.i("wow", "Card PID: ${card.pid}")
-                val intent = Intent().putExtra(addCardReply, card)
+                )} else { null }
+
+                val intent = Intent().putExtra(ADD_CARD_REPLY, card ?: newCard)
                 setResult(RESULT_OK, intent)
                 finish()
-            }
         }
     }
 
@@ -133,6 +162,6 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     companion object {
-        const val addCardReply = "com.piper.swishcards.AddCardActivity.REPLY"
+        const val ADD_CARD_REPLY = "com.piper.swishcards.AddCardActivity.REPLY"
     }
 }

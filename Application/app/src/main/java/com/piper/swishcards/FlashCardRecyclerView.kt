@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FlashCardRecyclerView(context: Context, callback: AddCardCallback): RecyclerView.Adapter<FlashCardRecyclerView.FlashCardHolder>() {
 
-    val mContext = context //MainActivity context passed through. Allows MainActivity to run startActivityForResult
+    val mContext = context //FlashCardsOverview context passed through. Allows the activity to deal with all data to pass to viewmodel
     var flashCards = emptyList<FlashCard>()
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    val callback: AddCardCallback? = null
+    val callback: AddCardCallback = callback
 
     override fun getItemCount(): Int = flashCards.size
 
@@ -32,18 +32,17 @@ class FlashCardRecyclerView(context: Context, callback: AddCardCallback): Recycl
                 //set startActivity to Update a Card's information here.
 
                 val intent = Intent(this.layout.context, AddCardActivity::class.java).apply {
-                    putExtra(DeckRecyclerAdapter.DeckPassedItemKey, item)
+                    putExtra(CardPassedItemKey, item)
                 }
                 //cast to MainActivity since it is observing any changes to Decks. Therefore, it will deal with change.
-                (mContext as MainActivity).startActivityForResult(intent,
-                    AddCardkActivityStartForResult
-                )
+                (mContext as FlashCardsOverview).startActivityForResult(intent, AddCardkActivityStartForResult)
                 true
             }
 
-            checkbox.setOnCheckedChangeListener { checkbox: CompoundButton, _isChecked: Boolean ->
-                //set callback here to updateCard() value of completed.
-                //callback?.onUpdateCard(item)
+            checkbox.setOnCheckedChangeListener { checkBox: CompoundButton, _isChecked: Boolean ->
+                item.completed = _isChecked
+                callback.onUpdateCard(item)
+                checkBox.isChecked = item.completed
             }
         }
     }
@@ -60,7 +59,8 @@ class FlashCardRecyclerView(context: Context, callback: AddCardCallback): Recycl
     }
 
     companion object {
-        val AddCardkActivityStartForResult = 925065
+        val AddCardkActivityStartForResult = 2020
+        val CardPassedItemKey = "card_passed_from_deck_recycler_view"
     }
 
     class FlashCardHolder(v: View) : RecyclerView.ViewHolder(v) {

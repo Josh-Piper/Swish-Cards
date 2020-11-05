@@ -2,6 +2,7 @@ package com.piper.swishcards
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -58,21 +59,13 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             .add(R.id.fragment_container_bottom_bar, firstFragment)
             .commit()
 
+        val lightModeKey = getString(R.string.light_mode_pref_key)
 
         deleteCompletedDecks = findViewById(R.id.delete_complete_decks)
         deleteAllDecks = findViewById(R.id.delete_all_decks)
         lightMode = findViewById(R.id.light_mode_checkbox)
         settingsViewModel = ViewModelProvider(this).get(SettingsViewModel::class.java) //ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(SettingsViewModel::class.java) not needed as there are no additional parametres
         var proceedWithRequest: SETTINGS = SETTINGS.INVALID
-
-        val lightModeKey = getString(R.string.light_mode_pref_key)
-
-        fun updateColourScheme() {
-            when (lightMode.isChecked) {
-                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
 
         fun resetAction() { proceedWithRequest = SETTINGS.INVALID; deleteAllDecks.isChecked = false; deleteCompletedDecks.isChecked = false; }
 
@@ -94,6 +87,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
 
+
         settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
         lightMode.isChecked = settingsViewModel.darkMode
 
@@ -106,7 +100,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         lightMode.setOnCheckedChangeListener { compoundButton, isChecked ->
             sharedPref.edit().putBoolean(lightModeKey, isChecked).apply()
             settingsViewModel.darkMode = sharedPref.getBoolean(lightModeKey, false)
-            updateColourScheme()
+            updateColourScheme(lightMode.isChecked)
         }
 
        firstFragment.showCurrent()
@@ -123,5 +117,15 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onBackPressed() {
         firstFragment.closeScreen()
         super.onBackPressed()
+    }
+
+    companion object {
+        //Update colour scheme
+        fun updateColourScheme(condition: Boolean) {
+            when (condition) {
+                false -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
     }
 }
