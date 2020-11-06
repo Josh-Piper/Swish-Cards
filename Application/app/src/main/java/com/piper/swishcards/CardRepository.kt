@@ -7,11 +7,13 @@ import java.util.*
 
 class CardRepository(private val cardDAO: CardDAO) {
 
+    //Declarations
     private val allCards = MediatorLiveData<List<FlashCard>>()
     private var oldSource: LiveData<List<FlashCard>> = MutableLiveData()
 
     fun getAllCards(): LiveData<List<FlashCard>> = allCards
 
+    //MutableLiveData allows for merging of sources etc. Used for future proofing.
     private fun loadLiveData(newSource: LiveData<List<FlashCard>>) {
         allCards.removeSource(oldSource)
         oldSource = newSource
@@ -20,7 +22,7 @@ class CardRepository(private val cardDAO: CardDAO) {
         }
     }
 
-    suspend fun sortCardBy(sortingMethod: SortCard, parentID: UUID) {
+    fun sortCardBy(sortingMethod: SortCard, parentID: UUID) {
         when (sortingMethod) {
             SortCard.ALL -> loadLiveData(cardDAO.getAllCards())
             SortCard.PARENT_ID -> loadLiveData(cardDAO.sortCardsByParentID(parentID))
@@ -43,7 +45,7 @@ class CardRepository(private val cardDAO: CardDAO) {
     }
 
     //deleteAllCardsFromParent()
-    suspend fun deleteAllCardsFromParent(parentID: UUID) {
+    fun deleteAllCardsFromParent(parentID: UUID) {
         cardDAO.deleteAllCardsFromParent(parentID)
     }
 
@@ -52,6 +54,7 @@ class CardRepository(private val cardDAO: CardDAO) {
         cardDAO.deleteAllCards()
     }
     companion object {
+        //singleton approach
         private var cardRepo: CardRepository? = null
 
         fun get(cardDao: CardDAO): CardRepository {

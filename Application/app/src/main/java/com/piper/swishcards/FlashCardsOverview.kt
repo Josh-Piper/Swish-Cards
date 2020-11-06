@@ -16,15 +16,15 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
 class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     AddCardCallback {
+
+    //Declarations
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -37,7 +37,6 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var startBtn: Button
     private lateinit var toastContext: LinearLayout
     private lateinit var startCards: List<FlashCard>
-    var deck: Deck? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,24 +65,25 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         //dynamic observation
-        deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
+        cardsViewModel.deck = intent.extras?.getParcelable(DeckRecyclerAdapter.passDeckToFlashCardOverview)
 
-        if (deck != null) {
+        //Link to ViewModel for orientation changes
+        if (cardsViewModel.deck != null) {
             //set the top bar message
-            val message = String.format(getString(R.string.top_bar_title_message), deck?.title)
+            val message = String.format(getString(R.string.top_bar_title_message), cardsViewModel.deck?.title)
             topBarTitle.setText(message)
 
             //Sorting Cards only by parent ID
-            cardsViewModel.sortCards(SortCard.PARENT_ID, deck?.id ?: UUID.randomUUID())
+            cardsViewModel.sortCards(SortCard.PARENT_ID, cardsViewModel.deck?.id ?: UUID.randomUUID())
 
         } else {
             finish()
             Log.i(MainActivity.GlobalLoggingName, "Error occurred")
         }
 
-        //this isnt working? not updating the heirarchy when theres something new
+        //Update the UO when changes are made to the LiveData, startCards are assigned as passing issue current persists
         cardsViewModel.allCards.observeForever { cards ->
-            deck?.let { adapters.setCards(cards) }
+            cardsViewModel.deck?.let { adapters.setCards(cards) }
             startCards = cards
         }
 
@@ -91,7 +91,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         fab = findViewById(R.id.flash_cards_overview_fab)
         fab.setOnClickListener {
             val intent = Intent(this, AddCardActivity::class.java).apply {
-                putExtra(passDeckToCreateNewCard, deck)
+                putExtra(passDeckToCreateNewCard, cardsViewModel.deck)
             }
 
             startActivityForResult(intent, createNewCardFromAddCardRequestCode)
@@ -132,6 +132,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
+    //Updates the FlashCard via. the ViewModel.
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -171,10 +172,11 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         menuInflater.inflate(R.menu.review, menu)
     }
 
+    //Only start a reviewal if review_all is clicked. As no other method is implemented..
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.review_all -> {
-                deck?.apply {
+                cardsViewModel.deck?.apply {
                     val intent = Intent(this@FlashCardsOverview, FlashCardReview::class.java)
                     if (startCards?.size > 0) {
                         intent.putParcelableArrayListExtra(
@@ -185,7 +187,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
                     } else {
                         Toast.makeText(
                             this@FlashCardsOverview,
-                            "Error Occurred",
+                            "Error Occurred, Please Add Cards.",
                             Toast.LENGTH_SHORT
                         ).show()
                          }

@@ -4,12 +4,11 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -26,6 +25,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var firstFragment: BottomBarFragment
     private lateinit var toastContext: LinearLayout
+    private lateinit var addCardViewModel: AddCardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +38,9 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         cardAnswer = findViewById(R.id.activity_add_card_answer)
         cardType = findViewById(R.id.activity_add_card_type_of_question)
         toastContext = findViewById(R.id.activity_add_card_content)
+        addCardViewModel = ViewModelProvider(this).get(AddCardViewModel::class.java).apply {
+            setCallback(this@AddCardActivity)
+        }
 
         //Topbar navigational drawer. Associating their widgets
         drawer = findViewById(R.id.nav_drawer)
@@ -45,9 +48,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        //Logic for the navigational drawer. This is currently copied and pasted code. Should be moved out into a possible? fragment?
-        //possible issues as a Fragment is contained to a certain space. Thus, the drawer won't be able to fit the screen in height.
-        //Needs to be refactored
+        //Refactoring to remove the 5 lines of code. Possible issues as a Fragment is contained to a certain space. Thus, the drawer won't be able to fit the screen in height.
         topBarNav.bringToFront()
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
         drawer.addDrawerListener(toggle)
@@ -71,36 +72,38 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
         //Get Deck from FlashCardsOverview. If no Deck was passed through. Then finish().
-        //This AddCardActivity requires the parentID. Thus, it should not operate unless the parent Deck is passed.
-        val deck = intent.extras?.getParcelable<Deck>(FlashCardsOverview.passDeckToCreateNewCard)
+        //This AddCardActivity requires the parentID. Thus, it should not operate if a deck nor flashcard is passed
+        addCardViewModel.deck = intent.extras?.getParcelable(FlashCardsOverview.passDeckToCreateNewCard)
 
         //Get FlashCard from recycler view from a long on Click
-        val card = intent.extras?.getParcelable<FlashCard>(FlashCardRecyclerView.CardPassedItemKey)
+        addCardViewModel.card = intent.extras?.getParcelable(FlashCardRecyclerView.CardPassedItemKey)
 
-        if (card != null) {
-            cardType.setSelection(adapter.getPosition(card.type))
-            cardQuestion.setText(card.question)
-            cardAnswer.setText(card.answer)
-        } else if (deck == null) {
+        //If a Card or Deck is passed, than it should be assigned to a ViewModel. i.e, this is needed to refactor to allow for orientation handling
+        if (addCardViewModel.card != null) {
+            addCardViewModel.card?.apply {
+                cardType.setSelection(adapter.getPosition(type))
+                cardQuestion.setText(question)
+                cardAnswer.setText(answer)
+            }
+        } else if (addCardViewModel.deck == null) {
             finish() //An error occurred. (Log, if need be)
         }
 
         //Set validation text watchers
-        val watcher = validatingWatcher(this)
+        val watcher = ValidatingWatcher(this) //Note, no bad words were set. So swearing is allowed for FlashCards
         cardAnswer.addTextChangedListener(watcher)
         cardQuestion.addTextChangedListener(watcher)
 
 
         //Delete if a pre-existing card was selected.
         deleteBtn.setOnClickListener { _ ->
-            if (card != null) {
-                card.question = "deleted_object"
-                val intent = Intent().apply { putExtra(ADD_CARD_REPLY, card) }
+            if (addCardViewModel.card != null) {
+                addCardViewModel.card?.question = "deleted_object"
+                val intent = Intent().apply { putExtra(ADD_CARD_REPLY, addCardViewModel.card) }
                 setResult(RESULT_OK, intent)
                 finish()
             }
         }
-
 
         doneButton.setOnClickListener { view ->
             //check the spinner option. Only Short_Answer currently supported. Snackbar... (an action to automatically change it to make it easier for a user.)
@@ -113,41 +116,22 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 return@setOnClickListener
             }
 
-            if (!(cardQuestion.text.isEmpty()) && !(cardAnswer.text.isEmpty())) {
-                card?.apply {
-                    question = cardQuestion.text.toString()
-                    answer = cardAnswer.text.toString()
-                }
-           //if no pre-existing card passed through. Assign newCard to a FlashCard()
-                val newCard = if (deck != null) {
-                    FlashCard(
-                    pid = deck.id,
-                    question = cardQuestion.text.toString(),
-                    answer = cardAnswer.text.toString(),
-                    type = CardType.SHORT_ANSWER,
-                    completed = false
-                )} else { null }
-
-                val intent = Intent().putExtra(ADD_CARD_REPLY, card ?: newCard)
+            //Error checking moved to the ViewModel.
+            if (addCardViewModel.validateSucceeded(cardQuestion.text.toString(), cardAnswer.text.toString())) {
+                val intent = Intent().putExtra(ADD_CARD_REPLY, addCardViewModel.getCards(cardQuestion.text.toString(), cardAnswer.text.toString()))
                 setResult(RESULT_OK, intent)
                 finish()
-            } else {
-                Snackbar.make(
-                    view,
-                    "Invalid Input! check everything is correct ",
-                    Snackbar.LENGTH_LONG
-                ).setActionTextColor(
-                    Color.RED
-                ).show()
             }
         }
     }
 
+    //TopNaviBar syncing with BottomNavi logic
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 
+    //ValidatingTextWatcher callbacks (includes the 3 methods below)
     override fun setText(message: String) {
         if (cardQuestion.text.length >= 10) {
             cardQuestion.setText(cardQuestion.text.subSequence(0, 9))
@@ -160,6 +144,11 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         Toast.makeText(toastContext.context, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun setSnackBar(message: String) {
+        Snackbar.make(toastContext, message, Snackbar.LENGTH_LONG).setActionTextColor(Color.RED).show()
+    }
+
+    //Sync the screen after closed.
     override fun onBackPressed() {
         firstFragment.closeScreen()
         super.onBackPressed()

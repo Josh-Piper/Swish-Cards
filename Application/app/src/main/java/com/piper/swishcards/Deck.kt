@@ -23,12 +23,13 @@ data class Deck(
             val str: String = i.toString()
             return if (str.length == 1) ("0$str") else str
         }
-        //Format American date format to Aus.
+        //Format American date to Aus.
         fun formatDateToAU(day: Int, month: Int, year: Int): String {
-            //string placeholders causes crashes outside of Activities etc.
+            //string placeholders causes crashes outside of Activities etc. Thus, using string concatonation
             return "${addZeroToSingleDigit(day)}-${addZeroToSingleDigit(month)}-${addZeroToSingleDigit(year)}"
         }
 
+        //Convert String to Calendar for datatypes.
         fun getCalendarFromAU(dateAU: String): Calendar {
             val date = SimpleDateFormat( "dd-MM-yyyy", Locale.ENGLISH).parse(dateAU)
             val calender = Calendar.getInstance()
@@ -36,6 +37,7 @@ data class Deck(
             return calender
         }
 
+        //Calendar to String
         fun getStringFromCalendar(calendar: Calendar): String {
             return SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(calendar.time) //Added Locale.English
         }

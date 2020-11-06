@@ -1,26 +1,20 @@
 package com.piper.swishcards
 
-import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import org.w3c.dom.Text
 
 class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, CardReviewalCallbacks {
 
+    //Declarations
     private lateinit var questionText: TextView
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
@@ -37,9 +31,11 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_flash_card_review)
 
+        //Setup the top bar title
         topBarTitle = findViewById(R.id.topbar_title)
         topBarTitle.setText("Reviewing Cards")
 
+        //Assign variables to widgets
         nextBtn = findViewById(R.id.activity_flash_card_review_next_button)
         answerInput = findViewById(R.id.activity_flash_card_review_edit_text)
         progressBar = findViewById(R.id.activity_flash_card_review_progress_bar)
@@ -77,21 +73,24 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
         //Information needed to iterate through the different cards
         val cards = intent.extras?.getParcelableArrayList<Parcelable>(FlashCardsOverview.reviewCardsKey)
 
-        //declare ViewModel
+        //declare ViewModel and sync all data required to handle orientation changes
         flashCardViewModel = ViewModelProvider(this).get(FlashCardViewModel::class.java)
         flashCardViewModel.setDependencies((cards?.toList() as List<FlashCard>), this)
 
     //Next button logic.
         nextBtn.setOnClickListener { _ ->
+            //Check answer and increase/move to next card.
             flashCardViewModel.incrementCard(answerInput.text.toString())
         }
     }
 
+    //Sync the TopNaviBar with the BottomNaviBar logic
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 
+    //The following are callbacks activated via. the ViewModel.
     override fun increaseProgressBar() {
         progressBar.progress++
     }
@@ -109,7 +108,7 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
         snack.setAction("FINISHED") { _ ->
             finish()
         }
-        //changes snackBar's max lines
+        //changes snackBar's max lines (otherwise it will show ellipses)
         val v = snack.view
         val tv = v.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
         tv.maxLines = 5

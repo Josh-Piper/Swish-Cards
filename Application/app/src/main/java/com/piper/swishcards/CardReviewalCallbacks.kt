@@ -1,5 +1,6 @@
 package com.piper.swishcards
 
+//Callback for FlashCardReview activity and FlashCardViewModel
 interface CardReviewalCallbacks {
 
     fun increaseProgressBar()

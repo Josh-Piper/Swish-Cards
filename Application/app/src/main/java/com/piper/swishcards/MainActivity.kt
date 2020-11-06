@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     //Destroy the BroadcastReceiver, necessary to prevent memory leaks
     override fun onDestroy() {
-        Log.i(MainActivity.GlobalLoggingName, "MainActivity onDestroy() called")
+        Log.i(GlobalLoggingName, "MainActivity onDestroy() called")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }

@@ -3,7 +3,7 @@ package com.piper.swishcards
 import android.text.Editable
 import android.text.TextWatcher
 
-class validatingWatcher(callback: ValidateCallback): TextWatcher {
+class ValidatingWatcher(callback: ValidateCallback): TextWatcher {
 
     var bad_words: MutableList<String> = mutableListOf()
     var callback: ValidateCallback = callback

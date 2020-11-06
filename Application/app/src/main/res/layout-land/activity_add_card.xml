@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_weight="10"
+            android:id="@+id/activity_add_card_content"
             android:weightSum="10"
             android:layout_height="0dp">
 

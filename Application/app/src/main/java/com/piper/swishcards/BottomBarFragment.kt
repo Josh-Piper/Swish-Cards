@@ -93,8 +93,4 @@ class BottomBarFragment: Fragment() {
             return BottomBarFragment()
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 }

@@ -9,12 +9,16 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
+    //Declarations
     private val repository: DeckRepository
+    private val hiddenRepo: CardRepository
     val allDecks: LiveData<List<Deck>>
 
     init {
         val decksDao = FlashCardDB.getDatabase(application, viewModelScope).DeckDAO() //Get database interface
+        val cardsDao = FlashCardDB.getDatabase(application, viewModelScope).CardDAO()
         repository = DeckRepository.get(decksDao)
+        hiddenRepo = CardRepository.get(cardsDao)
         allDecks = repository.getAllDecks() //should this be observing
     }
 
@@ -37,5 +41,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun delete(deck: Deck) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(deck)
+        hiddenRepo.deleteAllCardsFromParent(deck.id)
     }
 }

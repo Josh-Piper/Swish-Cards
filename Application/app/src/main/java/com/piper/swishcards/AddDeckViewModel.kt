@@ -2,10 +2,10 @@ package com.piper.swishcards
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import java.util.*
 
 class AddDeckViewModel(application: Application) : AndroidViewModel(application) {
 
+    //declarations
     val bad_words: MutableList<String> = mutableListOf()
     private lateinit var callBack: AddDeckCallBack
 
@@ -31,11 +31,13 @@ class AddDeckViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun setDeck(title: String, date: Calendar) {
+    //Update the deck dependant on new information
+    fun setDeck(title: String, date: String) {
         deck?.title = title
-        deck?.date = date
+        deck?.date = Deck.getCalendarFromAU(date)
     }
 
+    //Ensure that only valid data is passed through
     fun isValidationCorrect(title: String, due: String): Boolean {
         if ( (!checkExists(title) && (!checkExists(due) ))) {
             return true
@@ -46,6 +48,6 @@ class AddDeckViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun checkExists(str: String): Boolean { return str.isNullOrEmpty() }
+    fun checkExists(str: String): Boolean { return str.isEmpty() }
 }
 

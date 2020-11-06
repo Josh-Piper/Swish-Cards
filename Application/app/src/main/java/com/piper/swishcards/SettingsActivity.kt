@@ -1,11 +1,8 @@
 package com.piper.swishcards
 
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -16,10 +13,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import java.lang.Exception
 
 class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    //declarations
     private lateinit var deleteCompletedDecks: CheckBox
     private lateinit var deleteAllDecks: CheckBox
     private lateinit var lightMode: CheckBox
@@ -82,7 +79,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             } //delete all decks from Repository and Toast to show completition
             .setNegativeButton("No") { _, _ -> resetAction() }
 
-        //Cache the value from SettingsViewModel according to the current colour sceme
+        //Cache the value from SettingsViewModel according to the current colour scheme
         val sharedPref = this.getSharedPreferences(
             getString(R.string.preference_file_key), Context.MODE_PRIVATE
         )
@@ -103,9 +100,11 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             updateColourScheme(lightMode.isChecked)
         }
 
+        //Used for debugging
        firstFragment.showCurrent()
     }
 
+    //Sync topbarnavi with bottom navi logic
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         firstFragment.changeLocationFromDrawer(item.itemId)
         return true

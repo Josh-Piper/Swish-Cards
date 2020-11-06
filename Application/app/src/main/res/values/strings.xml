@@ -38,8 +38,6 @@
     <string name="type_of_question">Type of Question</string>
     <string name="answer">Answer</string>
     <string name="flash_card_icon">Flash Card Icon in Navigation Drawer Header</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="review_VR">VR</string>
     <string name="review_AUDIO">Audio Assisted</string>
     <string name="review_UNLEARNED">Review Unlearned</string>

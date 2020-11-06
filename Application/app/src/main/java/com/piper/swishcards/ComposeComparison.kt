@@ -15,6 +15,7 @@ class ComposeComparison : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compose_comparison)
 
+        //uses MVVM approach.
         viewModel = ViewModelProvider(this).get(FlashCardViewModelz::class.java)
         cardButton = findViewById(R.id.flashCardBTN)
         nextButton = findViewById(R.id.nextCardBTN)
@@ -62,6 +63,7 @@ class FlashCards(cards: List<Question>) {
         currentState = State.Question
     }
 }
+
 
 class FlashCardViewModelz: ViewModel() {
 

@@ -2,6 +2,7 @@ package com.piper.swishcards
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import java.util.*
 
 class FlashCardViewModel(application: Application) : AndroidViewModel(application)  {
 
@@ -18,7 +19,8 @@ class FlashCardViewModel(application: Application) : AndroidViewModel(applicatio
         callback = cl
         maxCards = (flashCards.size - 1)
         callback.setQuestionText(flashCards[currentCard].question)
-        callback.setProgressMax(maxCards)
+        callback.increaseProgressBar()
+        callback.setProgressMax(maxCards + 1)
     }
 
     //Logic
@@ -36,11 +38,11 @@ class FlashCardViewModel(application: Application) : AndroidViewModel(applicatio
     fun checkAnswer(usersInput: String) = if (isCorrect(usersInput)) correctAnswers++ else correctAnswers
 
     fun isCorrect(usersInput: String): Boolean {
-        return flashCards[currentCard].answer.toLowerCase().trim() == usersInput.toLowerCase().trim()
+        return flashCards[currentCard].answer.toLowerCase(locale = Locale.ENGLISH).trim() == usersInput.toLowerCase(locale = Locale.ENGLISH).trim()
     }
 
     fun setFinishedReview() {
-        var message: String = "Good Job! Getting Smarter Already\n"
+        var message = "Good Job! Getting Smarter Already\n"
         val percentage: Float = correctAnswers.toFloat() / maxCards.toFloat() * 100.0f
         message += "You Achieved ${correctAnswers} out of ${maxCards} | ${percentage}% \n"
         message += when (percentage) {

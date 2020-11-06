@@ -2,7 +2,6 @@ package com.piper.swishcards
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-//ViewAdapter
 class DeckRecyclerAdapter(context: Context) :
     RecyclerView.Adapter<DeckRecyclerAdapter.DeckViewHolder>() {
 
@@ -26,7 +24,7 @@ class DeckRecyclerAdapter(context: Context) :
 
         holder.apply {
 
-            //For reusable/switching of items, set the checkbox to the current completed status.
+            //Creating new checkBox listener, thus, set it to null.
             checkBox.setOnClickListener(null)
 
             bind(item)
@@ -58,9 +56,11 @@ class DeckRecyclerAdapter(context: Context) :
                     setAction(changeCompletedForDeck)
                     putExtra(changeCompletedForDeckItemID, item)
                 }
+                //Update the status of the Deck immediately. Allows for sorting to occur properly.
                 LocalBroadcastManager.getInstance(checkbox.context).sendBroadcast(intent)
             }
 
+            //After the logic has occurred, than update the UI.
             checkBox.isChecked = item.completed
         }
     }
@@ -72,11 +72,14 @@ class DeckRecyclerAdapter(context: Context) :
 
     internal fun setDecks(deck: List<Deck>) {
         this.decks = deck
+        //Required to update the RecyclerView when the list is reassigned.
         notifyDataSetChanged()
     }
 
     //ViewHolder
     class DeckViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+
+        //declarations
         private val title: TextView = v.findViewById(R.id.fragment_deck_item_title)
         private val date: TextView = v.findViewById(R.id.fragment_deck_item_due_date)
         val layout: LinearLayout = v.findViewById(R.id.fragment_deck_item_linearLayout)

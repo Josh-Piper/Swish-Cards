@@ -10,8 +10,10 @@ import java.util.*
 
 class CardViewModel(application: Application) : AndroidViewModel(application) {
 
+    //Declarations
     private val repository: CardRepository
     val allCards: LiveData<List<FlashCard>>
+    var deck: Deck? = null
 
     init {
         val cardDao = FlashCardDB.getDatabase(application, viewModelScope).CardDAO() //gets Database interface
@@ -30,6 +32,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         return allCards.value
     }
 
+    //Syncing between the Repo and ViewModel.
     fun insertCard(card: FlashCard) = viewModelScope.launch(Dispatchers.IO) {
         repository.insertCard(card)
     }
