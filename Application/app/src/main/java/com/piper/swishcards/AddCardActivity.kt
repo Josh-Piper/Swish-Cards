@@ -1,6 +1,7 @@
 package com.piper.swishcards
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
-class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ValidateCallback {
 
     //Declare UI aspects of the application
     private lateinit var deleteBtn: TextView
@@ -24,6 +25,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var firstFragment: BottomBarFragment
+    private lateinit var toastContext: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         cardQuestion = findViewById(R.id.activity_add_card_question)
         cardAnswer = findViewById(R.id.activity_add_card_answer)
         cardType = findViewById(R.id.activity_add_card_type_of_question)
+        toastContext = findViewById(R.id.activity_add_card_content)
 
         //Topbar navigational drawer. Associating their widgets
         drawer = findViewById(R.id.nav_drawer)
@@ -60,7 +63,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         //Bottom navbar implementation
         //Inflate bottom navigational view
         firstFragment = BottomBarFragment.get().apply {
-            setScreen(SCREEN.CardPage)
+            setScreen(SCREEN.AddCard)
         }
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container_bottom_bar, firstFragment)
@@ -82,6 +85,10 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             finish() //An error occurred. (Log, if need be)
         }
 
+        //Set validation text watchers
+        val watcher = validatingWatcher(this)
+        cardAnswer.addTextChangedListener(watcher)
+        cardQuestion.addTextChangedListener(watcher)
 
 
         //Delete if a pre-existing card was selected.
@@ -96,8 +103,6 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
         doneButton.setOnClickListener { view ->
-
-          /*  //validation
             //check the spinner option. Only Short_Answer currently supported. Snackbar... (an action to automatically change it to make it easier for a user.)
             if (!cardType.selectedItem.equals(CardType.SHORT_ANSWER)) {
                 val snack = Snackbar.make (view, "Short Answer is currently ONLY Supported", Snackbar.LENGTH_SHORT)
@@ -108,24 +113,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 return@setOnClickListener
             }
 
-
-            //validation
-            //validation should be moved to a text watcher
-            //or external class
-            if (cardQuestion.text.length > 15 || cardAnswer.text.length > 15) {
-                val snack = Snackbar.make (view, "Short Answer is currently ONLY Supported", Snackbar.LENGTH_SHORT)
-                snack.setAction("SET") { view ->
-                    cardQuestion.text.substring(0, 15)
-                    cardAnswer.text.substring(0, 15)
-                }
-                snack.show()
-                return@setOnClickListener
-            }
-
-            if (cardQuestion.text.isNullOrEmpty() || cardAnswer.text.isNullOrEmpty()) {
-                Snackbar.make (view, "Question and Answer must NOT be empty!", Snackbar.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }*/
+            if (!(cardQuestion.text.isEmpty()) && !(cardAnswer.text.isEmpty())) {
                 card?.apply {
                     question = cardQuestion.text.toString()
                     answer = cardAnswer.text.toString()
@@ -143,6 +131,15 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 val intent = Intent().putExtra(ADD_CARD_REPLY, card ?: newCard)
                 setResult(RESULT_OK, intent)
                 finish()
+            } else {
+                Snackbar.make(
+                    view,
+                    "Invalid Input! check everything is correct ",
+                    Snackbar.LENGTH_LONG
+                ).setActionTextColor(
+                    Color.RED
+                ).show()
+            }
         }
     }
 
@@ -154,6 +151,18 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
         startActivity(intent)
         return true
+    }
+
+    override fun setText(message: String) {
+        if (cardQuestion.text.length >= 10) {
+            cardQuestion.setText(cardQuestion.text.subSequence(0, 9))
+        } else if (cardAnswer.text.length >= 10) {
+            cardAnswer.setText(cardAnswer.text.subSequence(0, 9))
+        }
+    }
+
+    override fun showToast(message: String) {
+        Toast.makeText(toastContext.context, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onBackPressed() {

@@ -53,7 +53,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         deleteBtn = findViewById(R.id.activity_add_deck_delete_button)
         inputTitle = findViewById(R.id.activity_add_deck_title_input_text)
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
-        toastContext = findViewById(R.id.content)
+        toastContext = findViewById(R.id.activty_add_deck_content)
 
         //Bottom navigational bar handling
         firstFragment = BottomBarFragment.get().apply {

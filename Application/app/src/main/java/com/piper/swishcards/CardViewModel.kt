@@ -26,6 +26,10 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun getCardsFromParent(): List<FlashCard>? {
+        return allCards.value
+    }
+
     fun insertCard(card: FlashCard) = viewModelScope.launch(Dispatchers.IO) {
         repository.insertCard(card)
     }
@@ -38,7 +42,7 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         repository.updateCard(card)
     }
 
-    fun deleteAllCardsFromParent(parentID: UUID) = viewModelScope.launch {
+    fun deleteAllCardsFromParent(parentID: UUID) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAllCardsFromParent(parentID)
     }
 

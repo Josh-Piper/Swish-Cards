@@ -11,26 +11,21 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     //Declare the UI widgets.
-    private lateinit var globalViewModel: GlobalViewModel
+    private lateinit var globalViewModel: MainActivityViewModel
     private lateinit var contextMenuText: TextView
     private lateinit var fab: FloatingActionButton
     private lateinit var recycler: RecyclerView
@@ -77,7 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         SettingsActivity.updateColourScheme(sharedPref.getBoolean(lightModeKey, false))
 
         //basic declarations. UI + ViewModels + RecyclerViews(adapter)
-        globalViewModel = ViewModelProvider(this).get(GlobalViewModel::class.java)
+        globalViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         fab = findViewById(R.id.main_activity_fab)
 
         //Context Menu

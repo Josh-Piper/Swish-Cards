@@ -7,7 +7,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GlobalViewModel(application: Application) : AndroidViewModel(application) {
+class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: DeckRepository
     val allDecks: LiveData<List<Deck>>

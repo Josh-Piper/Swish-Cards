@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:id="@+id/content"
+        android:id="@+id/activty_add_deck_content"
         android:orientation="vertical"
         android:background="@color/background_color"
         android:layout_height="match_parent">

@@ -73,6 +73,9 @@ interface CardDAO {
     fun sortCardsByParentID(pid: UUID): LiveData<List<FlashCard>>
 
     @Query("SELECT * FROM card_table")
+    fun getAllCardsFromParent(): LiveData<List<FlashCard>>
+
+    @Query("SELECT * FROM card_table")
     fun getAllCards(): LiveData<List<FlashCard>>
 
 
@@ -83,7 +86,7 @@ interface CardDAO {
 //Database
 //
 ///////////////////////
-@Database(entities = [Deck::class, FlashCard::class], version = 8, exportSchema = false)
+@Database(entities = [Deck::class, FlashCard::class], version = 9, exportSchema = false)
 @TypeConverters(DeckTypeConverters::class)
 abstract class FlashCardDB : RoomDatabase() {
 

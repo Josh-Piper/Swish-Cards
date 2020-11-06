@@ -6,4 +6,5 @@ enum class SCREEN {
     CardPage,
     AddDeck,
     AddCard,
+    REVIEWAL
 }

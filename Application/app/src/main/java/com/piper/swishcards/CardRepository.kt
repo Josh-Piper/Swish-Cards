@@ -43,7 +43,7 @@ class CardRepository(private val cardDAO: CardDAO) {
     }
 
     //deleteAllCardsFromParent()
-    fun deleteAllCardsFromParent(parentID: UUID) {
+    suspend fun deleteAllCardsFromParent(parentID: UUID) {
         cardDAO.deleteAllCardsFromParent(parentID)
     }
 

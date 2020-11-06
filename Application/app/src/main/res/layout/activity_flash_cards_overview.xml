@@ -31,24 +31,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/top_bar_color"
-            android:orientation="horizontal">
-
-            <TextView
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_weight="2"
-                android:id="@+id/topbar_title"
-                android:textColor="#ffff"
-                tools:text="@string/placeholder"
-                android:textSize="25sp" />
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/top_bar_color"
+                android:orientation="horizontal">
 
-        </androidx.appcompat.widget.Toolbar>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:layout_weight="2"
+                    android:id="@+id/topbar_title"
+                    android:textColor="#ffff"
+                    tools:text="@string/placeholder"
+                    android:textSize="25sp" />
+
+            </androidx.appcompat.widget.Toolbar>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -70,6 +70,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/flash_cards_overview_start_btn"
                 android:textColor="@color/white"
                 android:textSize="@dimen/med_text_size"
                 android:paddingHorizontal="@dimen/default_margin_size"
@@ -91,6 +92,7 @@
 
     <LinearLayout
         android:id="@+id/fragment_container_bottom_bar"
+        android:orientation="vertical"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="1.5"
