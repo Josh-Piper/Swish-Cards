@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class ComposeComparison : AppCompatActivity() {
-    private lateinit var viewModel: FlashCardViewModel
+    private lateinit var viewModel: FlashCardViewModelz
     private lateinit var cardButton: Button
     private lateinit var nextButton: Button
 
@@ -15,7 +15,7 @@ class ComposeComparison : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_compose_comparison)
 
-        viewModel = ViewModelProvider(this).get(FlashCardViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FlashCardViewModelz::class.java)
         cardButton = findViewById(R.id.flashCardBTN)
         nextButton = findViewById(R.id.nextCardBTN)
 
@@ -63,7 +63,7 @@ class FlashCards(cards: List<Question>) {
     }
 }
 
-class FlashCardViewModel: ViewModel() {
+class FlashCardViewModelz: ViewModel() {
 
     var flashCards = (FlashCards( listOf(
         Question("How many Bananas should go in a Smoothie?", "3 Bananas"),

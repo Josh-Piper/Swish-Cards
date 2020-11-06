@@ -1,22 +1,25 @@
 package com.piper.swishcards
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import org.w3c.dom.Text
 
-class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, CardReviewalCallbacks {
 
     private lateinit var questionText: TextView
     private lateinit var drawer: DrawerLayout
@@ -25,7 +28,10 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var topBarTitle: TextView
     private lateinit var nextBtn: Button
     private lateinit var firstFragment: BottomBarFragment
+    private lateinit var flashCardViewModel: FlashCardViewModel
     private lateinit var answerInput: EditText
+    private lateinit var progressBar: ProgressBar
+    private lateinit var snackContext: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,9 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         nextBtn = findViewById(R.id.activity_flash_card_review_next_button)
         answerInput = findViewById(R.id.activity_flash_card_review_edit_text)
+        progressBar = findViewById(R.id.activity_flash_card_review_progress_bar)
+        questionText = findViewById(R.id.activity_flash_card_review_question)
+        snackContext = findViewById(R.id.activity_flash_card_review_context)
 
         //Topbar navigational drawer declarations
         drawer = findViewById(R.id.drawer)
@@ -65,27 +74,16 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
             .add(R.id.fragment_container_bottom_bar, firstFragment)
             .commit()
 
-        questionText = findViewById(R.id.activity_flash_card_review_question)
-
-
-        //dynamic observation
         //Information needed to iterate through the different cards
         val cards = intent.extras?.getParcelableArrayList<Parcelable>(FlashCardsOverview.reviewCardsKey)
-        val card = (cards?.toList() as List<FlashCard>)
-        var currentCard = 0
-        val maxCards = card.size - 1
 
-        questionText.setText(card[currentCard].question)
+        //declare ViewModel
+        flashCardViewModel = ViewModelProvider(this).get(FlashCardViewModel::class.java)
+        flashCardViewModel.setDependencies((cards?.toList() as List<FlashCard>), this)
 
     //Next button logic.
-        nextBtn.setOnClickListener {view ->
-            if (!(currentCard + 1 > maxCards)) {
-                currentCard++
-                questionText.setText(card[currentCard].question)
-            }
-            if (currentCard == maxCards) nextBtn.setText("Finish")
-            if (nextBtn.text == "Finish" && currentCard == maxCards) finish()
-
+        nextBtn.setOnClickListener { _ ->
+            flashCardViewModel.incrementCard(answerInput.text.toString())
         }
     }
 
@@ -95,11 +93,38 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
             R.id.drawer_settings -> {
                 finish(); startActivity(Intent(this, SettingsActivity::class.java))
             }
-            else -> finish() 
+            else -> finish()
         }
         return true
     }
 
+    override fun increaseProgressBar() {
+        progressBar.progress++
+    }
+
+    override fun setQuestionText(question: String) {
+        questionText.setText(question)
+    }
+
+    override fun setNextButtonText(text: String) {
+        nextBtn.setText(text)
+    }
+
+    override fun finishedReviewal(message: String) {
+        val snack = Snackbar.make (snackContext, message, Snackbar.LENGTH_INDEFINITE)
+        snack.setAction("FINISHED") { _ ->
+            finish()
+        }
+        //changes snackBar's max lines
+        val v = snack.view
+        val tv = v.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        tv.maxLines = 5
+        snack.show()
+    }
+
+    override fun setProgressMax(max: Int) {
+        progressBar.max = max
+    }
 
     override fun onBackPressed() {
         firstFragment.closeScreen()
