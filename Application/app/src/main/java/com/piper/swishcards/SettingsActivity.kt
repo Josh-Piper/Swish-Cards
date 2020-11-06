@@ -107,10 +107,7 @@ class SettingsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.drawer_decks -> finish()
-            else -> null //do nothing
-        }
+        firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 

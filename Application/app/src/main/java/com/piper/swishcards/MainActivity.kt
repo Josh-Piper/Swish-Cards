@@ -48,14 +48,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         //Navigation drawer logic
-        //NEEDS REFACTORING -> COPIED AND PASTED THROUGHOUT THE APPLICATION
+        //Set the activity to use its overridden function.
+        //Finding a way to simplify this is prefferred, i.e. through fragments (but issue with taking the whole screen [half])
         topBarNav.bringToFront()
         val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigational_drawer_open, R.string.navigational_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
         topBarNav.setNavigationItemSelectedListener(this)
 
-        //Inflate bottom navigational view
+        //Inflate bottom navigational bar
         firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.MainPage)
         }
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         .commit()
 
         ////////////////////
-        //Get current colour scenario
+        //Get current colour setting (collected from Settings Activity)
         val lightModeKey = getString(R.string.light_mode_pref_key)
         val sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         //Set colour scheme to match SettingsActivity
@@ -82,13 +83,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //Create broadcast listener and register the filters
         //A Local Broadcast Listener isn't required as a callback function would be more appropriate
-        //used for learning purposes.
+        //used for learning purposes. Other scenaro's use Callbacks...
         //For example, a Tablet may have better drawing applications, thus, may reuse the Broadcaster to
         //support for other things. (voice, video, drawing...)
        broadcastReceiver = object: BroadcastReceiver() {
            override fun onReceive(context: Context?, intent: Intent?) {
 
-               //Sent from the DeckRecyclerView for updating (longClickListener)
+               //Sent from the DeckRecyclerView for updating checkbox listener (when updating whether completed or not)
                //Everything regarding editing/adding Decks is done at MainActivity. Used for centralisation
                if (intent?.action == DeckRecyclerAdapter.changeCompletedForDeck) {
                    val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.changeCompletedForDeckItemID)
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                }
            }
        }
-        //Register the LocalBroadcast Listener
+        //Register the LocalBroadcast Listener. Lets the above code activated when a listen is activated (i.e. listening for DeckRecycler calls)
         val filter = IntentFilter(DeckRecyclerAdapter.changeCompletedForDeck)
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter)
 
@@ -106,20 +107,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recycler = findViewById(R.id.main_activity_reclyer_view)
         adapter = DeckRecyclerAdapter(this)
 
-        //start application is sorting alpha ascending mode
+        //start application is sorting alphabetically ascending mode
         globalViewModel.sortBy(Sort.ALPHA_ASC)
 
-        //Continually observe the changes made to the LiveData. Update the Recycler View depending on that
+        //Continually observe the changes made to the LiveData. Update the Recycler View when the ROOM database is updated.
         globalViewModel.allDecks.observeForever { deck ->
             deck?.let { adapter.setDecks(deck) }
         }
 
-        //Set RecyclerView.
+        //Set RecyclerView settings
         recycler.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
         }
 
+        //Floating Action Bar on Click Listener
         fab.setOnClickListener {
             startActivityForResult(
                 Intent(this, AddDeckActivity::class.java),
@@ -131,13 +133,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         contextMenuText.setOnClickListener { view ->
             openContextMenu(view)
         }
-
-
-
+        //Debugging
         firstFragment.showCurrent()
     }
 
-    //sort By Context Menu
+    //sort By Context Menu,
     override fun onCreateContextMenu(
         menu: ContextMenu?,
         v: View?,
@@ -175,13 +175,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             data?.extras?.getParcelable<Deck>(AddDeckActivity.ADD_DECK_REPLY)?.let { deck ->
                 globalViewModel.insert(deck)
             }
-            //UPDATING A DECK FROM RECYCLER ITEM LISTENER
+            //UPDATING A DECK FROM RECYCLER ITEM ON CLICK LISTENER
         } else if (requestCode == DeckRecyclerAdapter.AddDeckActivityStartForResult && resultCode == Activity.RESULT_OK) {
             //Action sent from longItemClick recycler Item.
-            //If position and deck is passed, update the delegated position with modified Deck.
             val deck = data?.extras?.getParcelable<Deck>(AddDeckActivity.ADD_DECK_REPLY)
 
-            if (deck?.title == "deleted_object") {
+            if (deck?.title == "deleted_object") { //Deleting based on this string is not a bullet proof method, may set with a new specific UUID and delete per id
                 globalViewModel.delete(deck)
             } else {
                 //Update deck
@@ -192,7 +191,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    //If the drawer is open, close the drawer, NOT the application.
+    //If the drawer is open and the application's back button is pressed, close the drawer, NOT the application.
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) { drawer.closeDrawer(GravityCompat.START) } else {
             firstFragment.closeScreen()
@@ -200,24 +199,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    //Destroy the BroadcastReceiver
+    //Destroy the BroadcastReceiver, necessary to prevent memory leaks
     override fun onDestroy() {
-        Log.i("crazy", "MainActivity onDestroy() called")
+        Log.i(MainActivity.GlobalLoggingName, "MainActivity onDestroy() called")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }
 
-    //Navigation Drawer options
+    //Navigation Drawer options. Relies on Bottom Bar fragment, used for central administration.
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.drawer_settings -> startActivity(Intent(this, SettingsActivity::class.java))
-            else -> null //do nothing
-        }
+        firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 
     companion object {
+        //FAB to AddDeck
         const val AddDeckActivityRequestCode = 25
+        const val GlobalLoggingName = "josh.pipers.super.secret.logging"
     }
 }
 

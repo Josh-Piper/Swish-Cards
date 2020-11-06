@@ -144,12 +144,7 @@ class AddCardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val intent = when (item.itemId) {
-            R.id.drawer_settings -> Intent(this, SettingsActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
-            R.id.drawer_decks -> Intent(this, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) }
-            else -> null //do nothing
-        }
-        startActivity(intent)
+        firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 

@@ -55,7 +55,7 @@ class FlashCardRecyclerView(context: Context, callback: AddCardCallback): Recycl
     fun setCards(cards: List<FlashCard>) {
         this.flashCards = cards
         notifyDataSetChanged()
-        Log.i("wow", "setCards called")
+        Log.i(MainActivity.GlobalLoggingName, "setCards called")
     }
 
     companion object {
@@ -69,7 +69,7 @@ class FlashCardRecyclerView(context: Context, callback: AddCardCallback): Recycl
         private val cardTitle: TextView = v.findViewById(R.id.card_title)
 
         fun bind(item: FlashCard) {
-            Log.i("wow", "binding called")
+            Log.i(MainActivity.GlobalLoggingName, "binding called")
             val title = if (item.question.length > 10) item.question.substring(0, 10) + ".." else item.question
             cardTitle.setText(title)
         }

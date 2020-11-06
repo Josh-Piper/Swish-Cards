@@ -4,8 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -20,7 +23,8 @@ import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AddCardCallback {
+class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    AddCardCallback {
     private lateinit var drawer: DrawerLayout
     private lateinit var topBarNav: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
@@ -31,7 +35,9 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var adapters: FlashCardRecyclerView
     private lateinit var firstFragment: BottomBarFragment
     private lateinit var startBtn: Button
+    private lateinit var toastContext: LinearLayout
     private lateinit var startCards: List<FlashCard>
+    var deck: Deck? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,7 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         topBarTitle = findViewById(R.id.topbar_title)
         startBtn = findViewById(R.id.flash_cards_overview_start_btn)
+        toastContext = findViewById(R.id.content)
 
         //Topbar navigational drawer declarations
         drawer = findViewById(R.id.drawer)
@@ -59,21 +66,19 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
 
         //dynamic observation
-        val deck =
-            intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
+        deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.passDeckToFlashCardOverview)
 
         if (deck != null) {
-            Log.i("cr", "${deck.id}")
             //set the top bar message
-            val message = String.format(getString(R.string.top_bar_title_message), deck.title)
+            val message = String.format(getString(R.string.top_bar_title_message), deck?.title)
             topBarTitle.setText(message)
 
             //Sorting Cards only by parent ID
-            cardsViewModel.sortCards(SortCard.PARENT_ID, deck.id)
+            cardsViewModel.sortCards(SortCard.PARENT_ID, deck?.id ?: UUID.randomUUID())
 
         } else {
             finish()
-            Log.i("wow", "Error occurred")
+            Log.i(MainActivity.GlobalLoggingName, "Error occurred")
         }
 
         //this isnt working? not updating the heirarchy when theres something new
@@ -92,85 +97,105 @@ class FlashCardsOverview : AppCompatActivity(), NavigationView.OnNavigationItemS
             startActivityForResult(intent, createNewCardFromAddCardRequestCode)
         }
 
-        startBtn.setOnClickListener { view ->
-            Log.i("cr", "${deck?.id}")
-            deck?.apply {
-                val intent = Intent(this@FlashCardsOverview, FlashCardReview::class.java)
-                if (startCards?.size > 0) {
-                    intent.putParcelableArrayListExtra(
-                        reviewCardsKey,
-                        startCards as ArrayList<FlashCard>
+
+        registerForContextMenu(startBtn)
+
+        startBtn.setOnClickListener {
+            openContextMenu(startBtn)
+
+        }
+
+        //Top Bar / Navigational Drawer logic
+        topBarNav.bringToFront()
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawer,
+            toolbar,
+            R.string.navigational_drawer_open,
+            R.string.navigational_drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        topBarNav.setNavigationItemSelectedListener(this)
+
+        //Inflate bottom navigational view
+        firstFragment = BottomBarFragment.get().apply {
+            setScreen(SCREEN.CardPage)
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container_bottom_bar, firstFragment)
+            .commit()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        firstFragment.changeLocationFromDrawer(item.itemId)
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == createNewCardFromAddCardRequestCode && resultCode == RESULT_OK) {
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)
+                ?.let { card ->
+                    cardsViewModel.insertCard(card)
+                    Log.i(MainActivity.GlobalLoggingName, "Card Owner: ${card.pid}")
+                }
+        } else if (requestCode == FlashCardRecyclerView.AddCardkActivityStartForResult && resultCode == RESULT_OK) {
+            //update or delete card depending on action
+            data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)
+                ?.let { card ->
+                    if (card.question == "deleted_object") cardsViewModel.deleteCard(card) else cardsViewModel.updateCard(
+                        card
                     )
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this@FlashCardsOverview, "Error Occurred", Toast.LENGTH_SHORT).show()
                 }
-            }
         }
+    }
 
+    override fun onUpdateCard(card: FlashCard) {
+        //only used to update card boolean value of completed.
+        cardsViewModel.updateCard(card)
+    }
 
-            //Top Bar / Navigational Drawer logic
-            topBarNav.bringToFront()
-            val toggle = ActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.navigational_drawer_open,
-                R.string.navigational_drawer_close
-            )
-            drawer.addDrawerListener(toggle)
-            toggle.syncState()
-            topBarNav.setNavigationItemSelectedListener(this)
+    override fun onBackPressed() {
+        firstFragment.closeScreen()
+        super.onBackPressed()
+    }
 
-            //Inflate bottom navigational view
-            firstFragment = BottomBarFragment.get().apply {
-                setScreen(SCREEN.CardPage)
-            }
-            supportFragmentManager.beginTransaction()
-                .add(R.id.fragment_container_bottom_bar, firstFragment)
-                .commit()
-        }
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
 
-        override fun onNavigationItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.drawer_decks -> finish()
-                R.id.drawer_settings -> {
-                    finish(); startActivity(Intent(this, SettingsActivity::class.java))
-                }
-                else -> null //do nothing
-            }
-            return true
-        }
+        menuInflater.inflate(R.menu.review, menu)
+    }
 
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
-
-            if (requestCode == createNewCardFromAddCardRequestCode && resultCode == RESULT_OK) {
-                data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)
-                    ?.let { card ->
-                        cardsViewModel.insertCard(card)
-                        Log.i("wow", "Card Owner: ${card.pid}")
-                    }
-            } else if (requestCode == FlashCardRecyclerView.AddCardkActivityStartForResult && resultCode == RESULT_OK) {
-                //update or delete card depending on action
-                data?.extras?.getParcelable<FlashCard>(AddCardActivity.ADD_CARD_REPLY)
-                    ?.let { card ->
-                        if (card.question == "deleted_object") cardsViewModel.deleteCard(card) else cardsViewModel.updateCard(
-                            card
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.review_all -> {
+                deck?.apply {
+                    val intent = Intent(this@FlashCardsOverview, FlashCardReview::class.java)
+                    if (startCards?.size > 0) {
+                        intent.putParcelableArrayListExtra(
+                            reviewCardsKey,
+                            startCards as ArrayList<FlashCard>
                         )
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(
+                            this@FlashCardsOverview,
+                            "Error Occurred",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                         }
                     }
-            }
+                return super.onContextItemSelected(item)}
+            else -> {
+                Toast.makeText(toastContext.context, "No Implemented Yet", Toast.LENGTH_SHORT)
+                    .show(); return super.onContextItemSelected(item); }
         }
-
-        override fun onUpdateCard(card: FlashCard) {
-            //only used to update card boolean value of completed.
-            cardsViewModel.updateCard(card)
-        }
-
-        override fun onBackPressed() {
-            firstFragment.closeScreen()
-            super.onBackPressed()
-        }
+    }
 
     companion object {
         const val createNewCardFromAddCardRequestCode = 1765

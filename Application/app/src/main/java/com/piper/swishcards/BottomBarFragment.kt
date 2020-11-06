@@ -13,9 +13,9 @@ import java.util.*
 class BottomBarFragment: Fragment() {
 
     private lateinit var bottomBar: BottomNavigationView
-    //change to stack / pop process Otherwise, will end mainscreen etc.
     private var currentScreen = ArrayDeque<SCREEN>()
 
+    //Set screen manually, used in each activity.
     fun setScreen(screen: SCREEN) {
         currentScreen.push(screen)
     }
@@ -24,9 +24,10 @@ class BottomBarFragment: Fragment() {
         currentScreen.pop()
     }
 
+    //Logging purposes
     fun showCurrent() {
         currentScreen.forEach {
-            Log.i("crazy", "$it")
+            Log.i(MainActivity.GlobalLoggingName, "$it")
         }
     }
 
@@ -40,31 +41,52 @@ class BottomBarFragment: Fragment() {
         }
 
         //Only have one possible screen set at all times.
-        //
         bottomBar.setOnNavigationItemSelectedListener { navBtn ->
-            var compareScreen = currentScreen.peek()
-            val intent = when (navBtn.itemId) {
-                R.id.nav_settings -> { if (compareScreen != SCREEN.SettingsPage) Intent(this.context, SettingsActivity::class.java) else null}
-                R.id.nav_decks -> { if (compareScreen != SCREEN.MainPage) Intent(this.context, MainActivity::class.java) else null }
-                else -> null
+            val newLoco = when (navBtn.itemId) {
+                R.id.nav_settings -> SCREEN.SettingsPage
+                R.id.nav_decks -> SCREEN.MainPage
+                else -> SCREEN.BACK
             }
-            if (intent == null) {
-                //Only close the activity if not on the MainActivity screen
-                if (navBtn.itemId != R.id.nav_decks && compareScreen != SCREEN.MainPage) { activity?.onBackPressed() }
-                else if (navBtn.itemId == R.id.nav_back) { activity?.onBackPressed() }
-
-            } else {
-                if (compareScreen != SCREEN.MainPage) activity?.onBackPressed()
-                startActivity(intent)
-            }
+            //All changes lead to changeLocation method
+            changeLocation(newLoco)
             true
         }
         return view
     }
 
+    //central administration for navigational logic
+    private fun changeLocation(newLocation: SCREEN) {
+        val compareScreen = currentScreen.peek()
+        val intent = when (newLocation) {
+            SCREEN.SettingsPage -> { if (compareScreen != SCREEN.SettingsPage) Intent(this.context, SettingsActivity::class.java) else null}
+            else -> null
+        }
+        if (intent == null) {
+            //Only close the activity if not on the MainActivity screen
+            if (newLocation != SCREEN.MainPage && compareScreen != SCREEN.MainPage) { activity?.onBackPressed() }
+            else if (newLocation == SCREEN.BACK) { activity?.onBackPressed() }
+            else if (newLocation == SCREEN.MainPage) { activity?.onBackPressed() }
+
+        } else {
+            if (compareScreen != SCREEN.MainPage) activity?.onBackPressed()
+            startActivity(intent)
+        }
+    }
+
+    //Used in Activities based on navigation drawer
+    fun changeLocationFromDrawer(newLocation: Int) {
+        val newLoca: SCREEN = when (newLocation) {
+            R.id.drawer_decks -> SCREEN.MainPage
+            R.id.drawer_settings -> SCREEN.SettingsPage
+            else -> SCREEN.BACK
+        }
+        changeLocation(newLoca)
+    }
+
     companion object {
         private var bottomBar: BottomBarFragment? = null
 
+        //Singular design pattern. Used as a Stack data type is used. Thus, the same instance should be referenced
         fun get(): BottomBarFragment {
             if (bottomBar == null)
                 bottomBar = BottomBarFragment()

@@ -88,13 +88,7 @@ class FlashCardReview : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.drawer_decks -> finish()
-            R.id.drawer_settings -> {
-                finish(); startActivity(Intent(this, SettingsActivity::class.java))
-            }
-            else -> finish()
-        }
+        firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 

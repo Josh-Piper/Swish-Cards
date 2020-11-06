@@ -1,7 +1,6 @@
 package com.piper.swishcards
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -13,13 +12,14 @@ import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 
-class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ValidateCallback {
+class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ValidateCallback, AddDeckCallBack {
     private lateinit var doneBtn: Button
     private lateinit var deleteBtn: TextView
     private lateinit var inputTitle: EditText
@@ -29,6 +29,7 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var firstFragment: BottomBarFragment
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var toastContext: LinearLayout
+    private lateinit var addDeckViewModel: AddDeckViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,8 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         inputDate = findViewById(R.id.activity_add_deck_due_input_text)
         toastContext = findViewById(R.id.activty_add_deck_content)
 
+        addDeckViewModel = ViewModelProvider(this).get(AddDeckViewModel::class.java)
+
         //Bottom navigational bar handling
         firstFragment = BottomBarFragment.get().apply {
             setScreen(SCREEN.AddDeck)
@@ -65,94 +68,73 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
 
         //TextWatcher declaration. Don't allow swear words or words > 10
-        val bad_words: MutableList<String> = mutableListOf()
+
         resources.openRawResource(R.raw.swear_words).bufferedReader().forEachLine { line ->
-            bad_words.add(line)
+            addDeckViewModel.bad_words.add(line)
         }
 
         val watcher = validatingWatcher(this).apply {
-            setWords(bad_words)
+            setWords(addDeckViewModel.bad_words)
         }
 
         inputTitle.addTextChangedListener(watcher)
 
         //if activity started from recycler item, then collect the Deck object
-        val deck = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
+        val d = intent.extras?.getParcelable<Deck>(DeckRecyclerAdapter.DeckPassedItemKey)
+        addDeckViewModel.init(d, this)
 
-        //if item collected is not null, assign the current EditTexts to match it
-        if (deck != null) {
-            inputTitle.setText(deck.title)
-            inputDate.setText(Deck.getStringFromCalendar(deck.date))
-        }
 
-        //Set minimum due date to be current date.
-        val datePicker = DatePickerDialog(this)
-        datePicker.datePicker.apply {
-            minDate = Calendar.getInstance().timeInMillis
-        }
 
-        //Open DatePickerDialogue instead of inputting text.
-        inputDate.setOnClickListener {
-            datePicker.show()
-            datePicker.setOnDateSetListener { datePicker, year, month, day ->
-                //format date to Australian convention and set EditText to it.
-                val newDate = Deck.formatDateToAU(day, month, year)
-                inputDate.setText(newDate)
+            //Set minimum due date to be current date.
+            val datePicker = DatePickerDialog(this)
+            datePicker.datePicker.apply {
+                minDate = Calendar.getInstance().timeInMillis
             }
-        }
 
-        doneBtn.setOnClickListener { view ->
-            val replyIntent = Intent()
-            val title: String = inputTitle.text.toString()
-            val due: String = inputDate.text.toString()
+            //Open DatePickerDialogue instead of inputting text.
+            inputDate.setOnClickListener {
+                datePicker.show()
+                datePicker.setOnDateSetListener { datePicker, year, month, day ->
+                    //format date to Australian convention and set EditText to it.
+                    val newDate = Deck.formatDateToAU(day, month, year)
+                    inputDate.setText(newDate)
+                }
+            }
 
-            if  (!(title.isEmpty()) && !(due.isEmpty())) {
+            doneBtn.setOnClickListener { view ->
+                val replyIntent = Intent()
+                val title: String = inputTitle.text.toString()
+                val due: String = inputDate.text.toString()
 
-                //if Deck was parsed from Recycler Item
-                if (deck != null) {
-                    deck.title = title
-                    deck.date = Deck.getCalendarFromAU(due)
+                    //if Deck was parsed from Recycler Item
+                    if (d != null) {
+                        addDeckViewModel.setDeck(title, Deck.getCalendarFromAU(due))
+                    }
+
+                    if (addDeckViewModel.isValidationCorrect(title, due)) {
+                    //create a new Deck object with the EditText values
+                    replyIntent.putExtra(ADD_DECK_REPLY, addDeckViewModel.getDeck(title, due))
+                    setResult(RESULT_OK, replyIntent)
+                    finish()
+                    }
                 }
 
-                val addDeck = Deck(
-                    title = title,
-                    date = Deck.getCalendarFromAU(due),
-                    completed = false
-                ) //create a new Deck object with the EditText values
-                replyIntent.putExtra(ADD_DECK_REPLY, deck ?: addDeck)
-                setResult(RESULT_OK, replyIntent)
-                finish()
-            } else {
-                Snackbar.make(
-                    view,
-                    "Invalid Input! check everything is correct ",
-                    Snackbar.LENGTH_LONG
-                ).setActionTextColor(
-                    Color.RED
-                ).show()
+            //Delete button changes the title of the current Deck Sends this to MainActivity.
+            //Main activity will delete the object if it has that specified name
+            //This needs refactoring/a better way for deleting.
+            //For instance, a different reply.
+            deleteBtn.setOnClickListener {
+                if (addDeckViewModel.deck != null) {
+                    addDeckViewModel.deck?.title = "deleted_object"
+                    val intent = Intent().apply { putExtra(ADD_DECK_REPLY, addDeckViewModel.deck) }
+                    setResult(RESULT_OK, intent)
+                    finish()
+                }
             }
-        }
-
-        //Delete button changes the title of the current Deck Sends this to MainActivity.
-        //Main activity will delete the object if it has that specified name
-        //This needs refactoring/a better way for deleting.
-        //For instance, a different reply.
-        deleteBtn.setOnClickListener {
-            if (deck != null) {
-                deck.title = "deleted_object"
-                val intent = Intent().apply { putExtra(ADD_DECK_REPLY, deck) }
-                setResult(RESULT_OK, intent)
-                finish()
-            }
-        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.drawer_decks -> finish()
-            R.id.drawer_settings -> { finish(); startActivity(Intent(this, SettingsActivity::class.java)) }
-            else -> null //do nothing
-        }
+        firstFragment.changeLocationFromDrawer(item.itemId)
         return true
     }
 
@@ -169,6 +151,17 @@ class AddDeckActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     override fun showToast(message: String) {
         Toast.makeText(toastContext.context, message, Toast.LENGTH_SHORT).show()
         hideKeyboardFromInputText()
+    }
+
+    override fun setSnackBar(message: String) {
+        Snackbar.make(toastContext, message, Snackbar.LENGTH_LONG).setActionTextColor(Color.RED).show()
+    }
+    override fun setDateFromModel(message: String) {
+        inputDate.setText(message)
+    }
+
+    override fun setTitleFromModel(message: String) {
+        inputTitle.setText(message)
     }
 
     override fun onBackPressed() {
